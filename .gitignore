@@ -1,0 +1,32 @@
+# web
+web/node_modules
+web/dist
+web/*.tsbuildinfo
+web/.env
+web/.env.*
+!web/.env.example
+
+# archive
+dhruv-rag/.venv
+dhruv-rag/venv
+dhruv-rag/.index
+dhruv-rag/.env
+dhruv-rag/.env.*
+!dhruv-rag/.env.example
+dhruv-rag/.streamlit/secrets.toml
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# tools / os
+.gstack/
+*.local
+.DS_Store
+
+# copyrighted audio: served locally, not published
+web/public/festival/sonara/audio/
+
+# editor / agent
+.claude/
+.vscode/
+.idea/

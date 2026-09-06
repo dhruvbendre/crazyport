@@ -1,0 +1,6 @@
+/* Tailwind v4, utilities only.
+   Preflight is deliberately left out: the site's own CSS (tokens.css,
+   globals.css ...) is the base, and Tailwind classes are used only inside
+   components/ui. The theme layer is left out too so Tailwind's --ease-* and
+   --font-* variables never shadow the site's tokens. */
+@import "tailwindcss/utilities" layer(utilities);

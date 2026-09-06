@@ -1,0 +1,60 @@
+:root {
+  --space: #050505;
+  --space-soft: #101010;
+
+  --paper: #e8e1cf;
+  --paper-light: #f5efdf;
+  --paper-edge: #c7beaa;
+  --paper-shadow: #b5aa93;
+
+  --orbit: #f3efe0;
+
+  /* Chalk (art.md §2.2): the only white in the universe. */
+  --chalk: #f1f1e8;
+  --chalk-bright: #ffffff;
+  --chalk-paper: #f8f8f2;
+  --chalk-soft: rgba(241, 241, 232, 0.72);
+  --chalk-faint: rgba(241, 241, 232, 0.42);
+  --chalk-dust: rgba(241, 241, 232, 0.22);
+  --chalk-line: rgba(241, 241, 232, 0.16);
+
+  --ink: #151515;
+  --ink-soft: #2e2c28;
+  --charcoal: #2a2724;
+
+  --sun: #ffd84a;
+  --sun-deep: #f5a82c;
+
+  --mercury: #7d847a;
+  --venus: #d16f33;
+  --earth-blue: #2e7ccb;
+  --earth-green: #5d9c62;
+  --mars: #c74436;
+  --jupiter: #f1852d;
+  --saturn: #e6785a;
+  --uranus: #42b69d;
+  --neptune: #1889c0;
+
+  --brass: #a97923;
+  --brass-highlight: #d6b55c;
+
+  --motion-fast: 180ms;
+  --motion-medium: 420ms;
+  --motion-enter: 720ms;
+  --motion-return: 380ms;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --font-ui: "Manrope", "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  --font-intro: "Lacquer", "Impact", "Arial Black", sans-serif;
+
+
+  /* Per-world theme (overridden on interior pages and by the route overlay) */
+  --planet-accent: #ffd84a;
+  --planet-accent-soft: rgba(255, 216, 74, 0.16);
+  --planet-field: #050505;
+  --planet-ink: #151515;
+}
+

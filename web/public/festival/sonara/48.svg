@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="102" viewBox="0 0 180 102">
+<defs><pattern id="curves" width="24" height="28" patternUnits="userSpaceOnUse"><path d="M4 4 q8 7 0 14 q-5 5 1 9" fill="none" stroke="#DBAFE0" stroke-width="2.5"/></pattern></defs>
+<g stroke-linecap="round" stroke-linejoin="round"><path d="M5 7 H165 Q183 35 165 72 Q145 96 105 96 H5Z" fill="#0084FF"/><path d="M5 7 H165 Q183 35 165 72 Q145 96 105 96 H5Z" fill="url(#curves)"/></g>
+</svg>

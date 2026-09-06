@@ -1,0 +1,146 @@
+/* ---------------------------------------------------------------------------
+   Portfolio intro: black paper, chalk and crayon, the same hand as the
+   solar system (components/intro/PortfolioIntro.tsx)
+   --------------------------------------------------------------------------- */
+
+.portfolio-intro {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  z-index: 90; /* above the cursor saucer (55) and the route overlay (60) */
+  overflow: hidden;
+  background: var(--space); /* frame zero is the board itself */
+  color: var(--chalk);
+  cursor: default;
+  will-change: opacity;
+  touch-action: none;
+}
+
+.portfolio-intro__filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* 1 · the scene, run through the crayon filter */
+.portfolio-intro__unicorn {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform, filter;
+}
+
+.portfolio-intro__scene,
+.portfolio-intro__scene > *,
+.portfolio-intro__scene canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+.portfolio-intro__scene {
+  filter: url(#intro-crayon) saturate(1.25) contrast(1.08);
+}
+
+/* 2 · paper tooth over the crayon: the same speckle the planets carry */
+.portfolio-intro__paper {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.16;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.95 0 0 0 0 0.9 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: soft-light;
+}
+
+/* a quiet vignette that gives the board depth; lifted during the push */
+.portfolio-intro__atmosphere {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(5, 5, 5, 0) 42%, rgba(5, 5, 5, 0.6) 100%);
+}
+
+/* 3 · the chalk ring */
+.portfolio-intro__chalk {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.portfolio-intro__ring {
+  will-change: transform;
+}
+
+/* 5 · the name, written in chalk */
+.portfolio-intro__title {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  pointer-events: none;
+  padding-inline: 20px;
+}
+
+.portfolio-intro__name {
+  margin: 0;
+  max-width: min(94vw, 1200px);
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: clamp(3rem, 9.5vw, 8.5rem);
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--chalk);
+  text-shadow: 0 0 1px rgba(241, 241, 232, 0.5);
+  opacity: 0;
+  will-change: transform, opacity, filter;
+  transform-origin: 50% 50%;
+}
+
+.portfolio-intro__rule {
+  display: block;
+  overflow: visible;
+  will-change: transform, opacity;
+}
+
+.portfolio-intro__rule path {
+  fill: none;
+  stroke: var(--chalk-soft);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+@media (max-width: 640px) {
+  .portfolio-intro__name {
+    font-size: clamp(2.9rem, 15vw, 4.8rem);
+  }
+  /* The displacement pass is the expensive part; phones keep the posterised crayon only. */
+  .portfolio-intro__scene {
+    filter: saturate(1.25) contrast(1.08);
+  }
+  .portfolio-intro__paper {
+    opacity: 0.12;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-intro__paper {
+    display: none;
+  }
+  .portfolio-intro__scene {
+    filter: saturate(1.2);
+  }
+}

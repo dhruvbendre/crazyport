@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="100" viewBox="0 0 350 100">
+<defs><pattern id="zebra" width="42" height="42" patternUnits="userSpaceOnUse" patternTransform="rotate(-20)"><path d="M0 5 C12 16 18 8 30 18 C36 23 40 24 46 20" fill="none" stroke="#00B398" stroke-width="9"/></pattern></defs>
+<g stroke-linecap="round" stroke-linejoin="round"><path d="M5 58 Q30 6 95 5 H330 Q352 24 337 55 Q322 85 275 92 H45 Q12 88 5 58Z" fill="#18120F"/><path d="M5 58 Q30 6 95 5 H330 Q352 24 337 55 Q322 85 275 92 H45 Q12 88 5 58Z" fill="url(#zebra)"/></g>
+</svg>

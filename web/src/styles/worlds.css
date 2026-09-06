@@ -1,0 +1,692 @@
+/* ---------------------------------------------------------------------------
+   Interior worlds (art.md §8)
+   The world's field colour, chalk type, the ambient layer behind and the
+   crayon horizon at the foot. Every world uses this; only its variables,
+   texture motif and horizon differ.
+   --------------------------------------------------------------------------- */
+
+.world {
+  --world-max: 920px;
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: var(--planet-field);
+  color: var(--chalk);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* soft atmospheric shading: one breath of the accent, top-right */
+.world::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(900px 520px at 88% -8%, var(--planet-accent-soft), transparent 62%);
+  pointer-events: none;
+}
+
+.world__ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.world__ambient-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.world__arcs path {
+  fill: none;
+  stroke: var(--chalk);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.18;
+}
+
+.world__stars circle {
+  fill: var(--chalk);
+}
+
+.world__inner {
+  position: relative;
+  z-index: 2;
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: var(--world-max);
+  margin: 0 auto;
+  padding: clamp(22px, 3.4vw, 44px) clamp(20px, 6vw, 72px) clamp(40px, 6vw, 72px);
+}
+
+/* ---- top row ------------------------------------------------------------- */
+
+.world__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(40px, 9vh, 96px);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: 21px;
+  color: var(--chalk-soft);
+  padding: 6px 4px;
+  transform: rotate(-1.5deg);
+  transition: color var(--motion-fast) var(--ease-out);
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--chalk);
+}
+
+.back-link:hover .back-link__icon {
+  transform: rotate(-14deg);
+}
+
+.back-link__icon {
+  width: 28px;
+  height: 28px;
+  transition: transform var(--motion-medium) var(--ease-out);
+}
+
+.world__catalog {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--chalk-faint);
+}
+
+/* ---- head ---------------------------------------------------------------- */
+
+.world__head {
+  margin-bottom: clamp(36px, 6vh, 72px);
+}
+
+.world__eyebrow {
+  margin: 0 0 6px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--chalk-soft);
+}
+
+.world__name {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: clamp(64px, 11vw, 132px);
+  line-height: 0.96;
+  letter-spacing: -0.005em;
+  color: var(--chalk);
+  transform: rotate(-1.2deg);
+  transform-origin: left bottom;
+}
+
+.world__descriptor {
+  margin: 10px 0 0 4px;
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: clamp(22px, 2.8vw, 30px);
+  color: var(--chalk-soft);
+  transform: rotate(-0.8deg);
+  transform-origin: left top;
+}
+
+.world__rule {
+  display: block;
+  width: 100%;
+  height: 12px;
+  margin: 26px 0 22px;
+  overflow: visible;
+}
+
+.world__rule path {
+  fill: none;
+  stroke: var(--chalk);
+  stroke-width: 1.4px;
+  stroke-linecap: round;
+  opacity: 0.38;
+}
+
+.world__rule--head {
+  width: min(100%, 420px);
+}
+
+.world__rule--head path {
+  opacity: 0.55;
+}
+
+.world__intro {
+  margin: 0;
+  max-width: 50ch;
+  font-family: var(--font-ui);
+  font-size: clamp(17px, 1.9vw, 20px);
+  line-height: 1.6;
+  color: var(--chalk-soft);
+}
+
+/* ---- sections ------------------------------------------------------------ */
+
+.world__sections {
+  display: grid;
+  gap: clamp(28px, 4vw, 44px);
+}
+
+.wsection {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px 40px;
+}
+
+.wsection .world__rule {
+  grid-column: 1 / -1;
+  margin: 0 0 12px;
+}
+
+@media (min-width: 760px) {
+  .wsection {
+    grid-template-columns: 240px minmax(0, 1fr);
+  }
+}
+
+.wsection__title {
+  margin: 0;
+  font-family: var(--font-hand);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.1;
+  color: var(--chalk);
+  transform: rotate(-0.6deg);
+  transform-origin: left top;
+}
+
+.wsection__body {
+  margin: 0;
+  color: var(--chalk-soft);
+  font-family: var(--font-ui);
+  font-size: 17px;
+  line-height: 1.66;
+  max-width: 62ch;
+}
+
+.wsection__body p {
+  margin: 0 0 14px;
+}
+
+.wsection__body p:last-child {
+  margin-bottom: 0;
+}
+
+.wsection__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.wsection__list li {
+  position: relative;
+  padding-left: 22px;
+}
+
+.wsection__list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.72em;
+  width: 10px;
+  height: 1.5px;
+  background: var(--chalk-soft);
+  transform: rotate(-8deg);
+}
+
+/* Chalk-underlined links out of a section: live demos, papers, profiles. */
+.wsection__links {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+.wsection__list + .wsection__links {
+  margin-top: 18px;
+}
+
+.wsection__link {
+  font-family: var(--font-hand);
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--chalk);
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--chalk-soft);
+  transition: border-color 160ms ease;
+}
+
+.wsection__link:hover,
+.wsection__link:focus-visible {
+  border-bottom-color: var(--chalk);
+}
+
+.wsection__link-note {
+  font-size: 14px;
+  color: var(--chalk-faint);
+}
+
+/* "Not yet catalogued" panel: a hand-ruled box awaiting Round 2. */
+.uncatalogued {
+  position: relative;
+  padding: 18px 20px 18px 48px;
+  border: 1.5px solid var(--chalk-faint);
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  transform: rotate(-0.35deg);
+  max-width: 52ch;
+}
+
+.uncatalogued__mark {
+  position: absolute;
+  left: 18px;
+  top: 19px;
+  color: var(--chalk-faint);
+}
+
+.uncatalogued__title {
+  margin: 0 0 4px;
+  font-family: var(--font-hand);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--chalk-soft);
+}
+
+.uncatalogued__note {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--chalk-faint);
+  font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+/* ---- footer -------------------------------------------------------------- */
+
+.world__footer {
+  margin-top: clamp(56px, 9vh, 110px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 32px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.world__next {
+  display: inline-grid;
+  gap: 2px;
+  text-decoration: none;
+  color: var(--chalk);
+}
+
+.world__next-label {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--chalk-faint);
+}
+
+.world__next-name {
+  font-family: var(--font-hand);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.1;
+  border-bottom: 1.5px solid transparent;
+  transition: border-color var(--motion-fast) var(--ease-out);
+}
+
+.world__next-section {
+  color: var(--chalk-soft);
+  font-weight: 500;
+}
+
+.world__next:hover .world__next-name,
+.world__next:focus-visible .world__next-name {
+  border-bottom-color: var(--chalk-soft);
+}
+
+.world__signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-hand);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--chalk-soft);
+  text-decoration: none;
+  transform: rotate(-2deg);
+}
+
+.world__signal:hover,
+.world__signal:focus-visible {
+  color: var(--chalk);
+}
+
+/* ---- horizon ------------------------------------------------------------- */
+
+.world__horizon {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: clamp(200px, 34vh, 400px);
+  margin-top: auto;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.world__horizon::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 42%;
+  z-index: 1;
+  background: linear-gradient(to bottom, var(--planet-field), transparent);
+}
+
+.world__horizon-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- Mnemora threshold --------------------------------------------------- */
+
+/* Short page: the horizon is pinned so it is already there on arrival. */
+.world--threshold .world__horizon {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(160px, 26vh, 300px);
+  z-index: 1;
+}
+
+.world--threshold .world__inner {
+  padding-bottom: clamp(180px, 30vh, 340px);
+}
+
+.world--threshold .world__top {
+  margin-bottom: clamp(28px, 5vh, 56px);
+}
+
+.world--threshold .world__head {
+  margin-bottom: clamp(24px, 4vh, 40px);
+}
+
+.threshold {
+  max-width: 640px;
+  margin-bottom: clamp(30px, 6vh, 64px);
+}
+
+.threshold__prompt {
+  margin: 0 0 14px;
+  font-family: var(--font-hand);
+  font-size: clamp(26px, 3.4vw, 36px);
+  font-weight: 600;
+  color: var(--chalk);
+  transform: rotate(-0.8deg);
+  transform-origin: left bottom;
+}
+
+.threshold__field {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1.6px solid var(--chalk-soft);
+  border-radius: 255px 12px 225px 12px / 12px 225px 12px 255px;
+  background: rgba(0, 0, 0, 0.18);
+  transition: border-color var(--motion-fast) var(--ease-out);
+}
+
+.threshold__field:focus-within {
+  border-color: var(--chalk);
+}
+
+.threshold__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 16px 18px;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--chalk);
+  font-family: var(--font-ui);
+  font-size: 17px;
+}
+
+.threshold__input::placeholder {
+  color: var(--chalk-faint);
+}
+
+.threshold__ask {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  background: transparent;
+  border: 0;
+  border-left: 1.4px solid var(--chalk-line);
+  color: var(--chalk);
+  font-family: var(--font-hand);
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.threshold__ask:disabled {
+  color: var(--chalk-faint);
+  cursor: default;
+}
+
+.threshold__ask:not(:disabled):hover {
+  color: var(--chalk-bright);
+}
+
+.threshold__ask:focus-visible {
+  outline: 2px solid var(--chalk);
+  outline-offset: -4px;
+}
+
+.threshold__prompts {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.threshold__chip {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1.3px solid var(--chalk-faint);
+  border-radius: 200px 8px 180px 8px / 8px 180px 8px 200px;
+  color: var(--chalk-soft);
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out);
+}
+
+.threshold__chip:nth-child(2n) {
+  transform: rotate(0.6deg);
+}
+
+.threshold__chip:nth-child(3n) {
+  transform: rotate(-0.7deg);
+}
+
+.threshold__chip:hover,
+.threshold__chip:focus-visible {
+  color: var(--chalk);
+  border-color: var(--chalk-soft);
+}
+
+.threshold__chip:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.threshold__note {
+  margin: 22px 0 0;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--chalk-soft);
+}
+
+.threshold__note code {
+  font-size: 12.5px;
+  color: var(--chalk);
+}
+
+.threshold__note--offline {
+  max-width: 48ch;
+  color: var(--chalk-faint);
+}
+
+.threshold__enter {
+  font-family: var(--font-hand);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--chalk);
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--chalk-soft);
+}
+
+.threshold__enter:hover {
+  border-bottom-color: var(--chalk);
+}
+
+.threshold__aside {
+  color: var(--chalk-faint);
+}
+
+/* ---- Signal / lost ------------------------------------------------------- */
+
+.world--signal .world__name,
+.world--lost .world__name {
+  font-size: clamp(56px, 9vw, 112px);
+}
+
+.world--lost .world__inner {
+  padding-top: clamp(80px, 18vh, 200px);
+}
+
+.world--lost .world__next {
+  margin-top: 40px;
+}
+
+/* ---- reduced motion ------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .back-link__icon,
+  .back-link,
+  .world__next-name,
+  .threshold__chip {
+    transition-duration: 0ms;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Art test route (development only)
+   --------------------------------------------------------------------------- */
+
+.art-test {
+  min-height: 100svh;
+  padding: 32px clamp(16px, 4vw, 48px) 96px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.art-test h1 {
+  font-size: 28px;
+  margin: 0 0 6px;
+}
+
+.art-test > p {
+  margin: 0 0 24px;
+  color: var(--ink-soft);
+}
+
+.art-test__board {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 28px;
+  padding: 32px;
+  margin-bottom: 28px;
+  border-radius: 8px;
+}
+
+.art-test__board--space {
+  background: var(--space);
+  color: var(--orbit);
+}
+
+.art-test__board--paper {
+  background: var(--paper-light);
+  border: 1px solid var(--paper-edge);
+}
+
+.art-test__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+.art-test__item svg {
+  overflow: visible;
+}
+
+.art-test__row-title {
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin: 24px 0 8px;
+}
+
+.art-test__link {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-weight: 600;
+}

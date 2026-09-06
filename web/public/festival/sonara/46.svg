@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="225" height="100" viewBox="0 0 225 100">
+<defs><pattern id="squig" width="28" height="24" patternUnits="userSpaceOnUse"><path d="M5 4 q8 5 1 13 q-4 5 3 7" fill="none" stroke="#FF5D00" stroke-width="3"/></pattern></defs>
+<g stroke-linecap="round" stroke-linejoin="round"><path d="M4 95 Q22 28 76 10 Q128 1 175 38 Q206 60 218 96Z" fill="#FFF133"/><path d="M4 95 Q22 28 76 10 Q128 1 175 38 Q206 60 218 96Z" fill="url(#squig)"/></g>
+</svg>
