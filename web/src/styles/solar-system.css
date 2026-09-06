@@ -30,6 +30,39 @@
   aspect-ratio: 430 / 1000;
 }
 
+/* A phone held sideways is shorter than the window's floor; never scroll for it. */
+@media (max-height: 520px) {
+  .stage__window {
+    min-height: 100svh;
+  }
+}
+
+/* A phone held upright: the stage is a 100dvh × 100dvw box turned 90°
+   clockwise, so the wide composition fills the tall screen edge to edge. */
+.stage--rotated {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vh;
+  width: 100dvh;
+  height: 100vw;
+  height: 100dvw;
+  min-height: 0;
+  transform-origin: top left;
+  transform: rotate(90deg) translateY(-100%);
+  z-index: 1;
+}
+
+.stage--rotated .stage__window {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.stage--rotated .stage__scene {
+  touch-action: none;
+}
+
 .stage__scene {
   position: absolute;
   inset: 0;

@@ -61,9 +61,9 @@ export function SolarSystemScene({ layout, scene, reducedMotion, stageRef, onLoc
     const svg = svgRef.current;
     if (!svg) return;
     const measure = () => {
-      const rect = svg.getBoundingClientRect();
-      const sx = rect.width / layout.viewBox.width;
-      const sy = rect.height / layout.viewBox.height;
+      // Layout size, not the bounding box: the stage may be rotated 90° on phones.
+      const sx = svg.clientWidth / layout.viewBox.width;
+      const sy = svg.clientHeight / layout.viewBox.height;
       const s = layout.preserveAspectRatio === "xMidYMid slice" ? Math.max(sx, sy) : Math.min(sx, sy);
       setUnitScale((prev) => (Math.abs(prev - s) < 0.002 ? prev : s));
     };
