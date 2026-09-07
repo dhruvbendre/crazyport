@@ -68,11 +68,11 @@ export const companions: Record<string, Companion> = {
     moods: { greet: "curious", idle: "drowsy", scroll: "curious", rush: "surprised", arrive: "happy" },
     load: definition(() => import("./avatars/ember.avatar.json"))
   },
-  magnara: {
+  verdance: {
     id: "sprig",
     name: "Sprig",
-    tagline: "grew from an idea",
-    greeting: "Hi! I'm Sprig. Everything on this world was planted as an idea and grew into something real. Most of it is live.",
+    tagline: "grew with the story",
+    greeting: "Hi! I'm Sprig. This world is Dhruv's story, and it grew the way I did: one chapter at a time. Start at the top.",
     moods: { greet: "excited", idle: "happy", scroll: "curious", rush: "excited", arrive: "celebrate" },
     load: definition(() => import("./avatars/sprig.avatar.json"))
   },
@@ -84,11 +84,11 @@ export const companions: Record<string, Companion> = {
     moods: { greet: "proud", idle: "idle", scroll: "thinking", rush: "suspicious", arrive: "proud" },
     load: definition(() => import("./avatars/tally.avatar.json"))
   },
-  verdance: {
+  magnara: {
     id: "saga",
     name: "Saga",
-    tagline: "reads like weather",
-    greeting: "Sit down, this one's a story. I'm Saga. Start at the top and read it like weather: where it began, what changed, what's next.",
+    tagline: "keeps the long stories",
+    greeting: "I'm Saga. Every band on this world is something he built: the problem, the approach, what shipped. Most of it is live, go and try one.",
     moods: { greet: "happy", idle: "idle", scroll: "listening", rush: "curious", arrive: "happy" },
     load: definition(() => import("./avatars/saga.avatar.json"))
   },

@@ -4,6 +4,7 @@ import { useGSAP } from "../motion/gsapSetup";
 import { HOME_ROUTE, journeyOrder, planetById, SIGNAL_ROUTE, type PlanetConfig } from "../data/planets";
 import type { FestivalCard, FestivalContent } from "../data/festival/types";
 import { profiles } from "../data/portfolio";
+import { BrandIcon } from "../components/ui/BrandIcon";
 import { site } from "../config/site";
 import { themeStyle, type WorldTheme } from "../components/layout/WorldTheme";
 import { BackToSystem } from "../components/layout/BackToSystem";
@@ -520,13 +521,13 @@ export function FestivalPage({ content, theme, planet }: Props) {
           <div className="fest-footer__social">
             <div className="fest-footer__icons">
               <a href={profiles.instagram} aria-label="Instagram" target="_blank" rel="noreferrer">
-                IG
+                <BrandIcon brand="instagram" />
               </a>
               <a href={profiles.linkedin} aria-label="LinkedIn" target="_blank" rel="noreferrer">
-                in
+                <BrandIcon brand="linkedin" />
               </a>
               <a href={profiles.github} aria-label="GitHub" target="_blank" rel="noreferrer">
-                GH
+                <BrandIcon brand="github" />
               </a>
             </div>
             <p className="fest-footer__by">
