@@ -1225,31 +1225,28 @@ button.fest-disc__art:focus-visible .fest-disc__svg {
   gap: 8px;
 }
 
-/* The organisation's real logo on a small paper tile above the lockup. */
+/* The organisation's real logo, plain, in the card's top-right corner. */
 .fest-card__logo {
-  display: grid;
-  place-items: center;
-  width: 132px;
-  height: 64px;
-  padding: 8px 12px;
-  margin: 0 0 4px;
-  background: var(--f-white);
-  border: 2px solid var(--f-ink);
-  border-radius: 4px;
-  box-shadow: 3px 3px 0 var(--f-ink);
-  transform: rotate(-1.2deg);
-  overflow: hidden;
-}
-
-.fest-card__logo--dark {
-  background: var(--f-ink);
-}
-
-.fest-card__logo img {
-  display: block;
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  z-index: 2;
+  width: auto;
+  height: 42px;
+  max-width: 130px;
   object-fit: contain;
+  object-position: right top;
+  pointer-events: none;
+}
+
+/* Marks drawn in white for dark headers: shown in ink on the paper. */
+.fest-card__logo--ink {
+  filter: invert(1) brightness(0.25);
+}
+
+/* Keep the first line of text clear of the logo. */
+.fest-card--logo .fest-card__right {
+  padding-top: 66px;
 }
 
 .fest-card__lockup {
@@ -1788,8 +1785,15 @@ button.fest-disc__art:focus-visible .fest-disc__svg {
     border-right: 0;
     border-bottom: 1.5px dashed rgba(24, 18, 15, 0.35);
   }
-  .fest-card__right {
+  .fest-card__right,
+  .fest-card--logo .fest-card__right {
     padding-top: 0;
+  }
+  .fest-card__logo {
+    top: 14px;
+    right: 14px;
+    height: 36px;
+    max-width: 110px;
   }
   .fest-form {
     grid-template-columns: 1fr;

@@ -56,8 +56,8 @@ export type FestivalCard = {
   /** Optional image shown in the card (screenshot, certificate). Prefer assets.cardImages. */
   image?: string;
   /**
-   * The organisation's real logo, shown in a tile above the lockup. `dark`
-   * puts it on an ink tile for marks drawn in white.
+   * The organisation's real logo, shown plain in the card's top-right corner.
+   * `dark` marks a logo drawn in white; it is inverted to ink on the paper.
    */
   logo?: { src: string; alt: string; dark?: boolean };
 };

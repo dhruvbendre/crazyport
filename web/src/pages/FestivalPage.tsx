@@ -168,15 +168,18 @@ function StageCard({ content, card, index }: { content: FestivalContent; card: F
   const image = content.assets?.cardImages?.[index] ?? card.image;
   const lines = first.items ? first.items.slice(0, CARD_LINES) : first.text ? [first.text] : [];
   return (
-    <article className="fest-card" data-enter>
+    <article className={`fest-card${card.logo ? " fest-card--logo" : ""}`} data-enter>
       <div className="fest-card__paper">
         <ChalkFrame seed={500 + index * 17} weight={2.2} inset={7} dust={10} />
+        {card.logo && (
+          <img
+            className={`fest-card__logo${card.logo.dark ? " fest-card__logo--ink" : ""}`}
+            src={card.logo.src}
+            alt={card.logo.alt}
+            loading="lazy"
+          />
+        )}
         <div className="fest-card__left">
-          {card.logo && (
-            <span className={`fest-card__logo${card.logo.dark ? " fest-card__logo--dark" : ""}`}>
-              <img src={card.logo.src} alt={card.logo.alt} loading="lazy" />
-            </span>
-          )}
           <h3 className="fest-card__lockup">
             {card.lockup.map((w) => (
               <span key={w}>{w}</span>
