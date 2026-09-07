@@ -1,0 +1,6 @@
+web/node_modules
+dhruv-rag/.venv
+dhruv-rag/.index
+dhruv-rag/tests
+dhruv-rag/.streamlit
+__pycache__

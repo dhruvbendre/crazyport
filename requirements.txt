@@ -1,0 +1,7 @@
+# Vercel Python function: api/archive.py (Mnemora's archive API).
+# The Streamlit app and dev tools live in dhruv-rag/requirements.txt.
+starlette>=0.40,<2
+numpy>=1.26,<3
+python-dotenv>=1.0,<2
+openai>=1.50,<3
+anthropic>=0.60,<2

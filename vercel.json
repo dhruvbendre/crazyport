@@ -4,5 +4,15 @@
   "buildCommand": "cd web && npm run build",
   "outputDirectory": "web/dist",
   "framework": null,
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "functions": {
+    "api/archive.py": {
+      "includeFiles": "dhruv-rag/{api.py,config,rag,knowledge}/**",
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    { "source": "/api/archive/(.*)", "destination": "/api/archive" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
 }
