@@ -7,6 +7,10 @@ import { setChatMood } from "../../motion/companionState";
 /** Moods the chat asks its companion for (animation keys, see data/companions.ts). */
 type RoroMood = "idle" | "listening" | "thinking" | "happy" | "confused" | "sad" | "surprised" | "sleeping";
 
+/** The typing effect: a short pause on the dots, then this many characters per frame. */
+const TYPING_PAUSE_MS = 700;
+const TYPING_STEP = 3;
+
 type ChatBlock = NonNullable<FestivalContent["chat"]>;
 
 type Message = {
@@ -108,15 +112,29 @@ export function ArchiveChat({ chat, seed }: Props) {
 
       try {
         const outcome: { meta: ArchiveMeta | null } = { meta: null };
-        // Tokens are gathered and committed once per animation frame instead
-        // of one React render per token.
-        let buffered = "";
-        let flush = 0;
-        const commit = () => {
-          flush = 0;
-          const chunk = buffered;
-          buffered = "";
-          if (chunk) setMessages((prev) => prev.map((m) => (m.id === answerId ? { ...m, content: m.content + chunk } : m)));
+        // Typing effect: the answer is gathered as it streams and typed out a
+        // few characters per frame, after a short "Roro is typing" pause, so
+        // it reads like a reply being written rather than a block appearing.
+        // One React commit per frame at most.
+        const startedAt = performance.now();
+        let target = "";
+        let shown = 0;
+        let raf = 0;
+        let done = false;
+        let settle: (() => void) | null = null;
+        const type = () => {
+          raf = 0;
+          if (performance.now() - startedAt < TYPING_PAUSE_MS) {
+            raf = requestAnimationFrame(type);
+            return;
+          }
+          if (shown < target.length) {
+            shown = Math.min(target.length, shown + TYPING_STEP);
+            const slice = target.slice(0, shown);
+            setMessages((prev) => prev.map((m) => (m.id === answerId ? { ...m, content: slice } : m)));
+          }
+          if (shown < target.length || !done) raf = requestAnimationFrame(type);
+          else settle?.();
         };
         const text = await askArchive(question, history, {
           onMeta: (meta) => {
@@ -124,13 +142,20 @@ export function ArchiveChat({ chat, seed }: Props) {
             patch({ meta });
           },
           onDelta: (delta) => {
-            buffered += delta;
-            if (!flush) flush = requestAnimationFrame(commit);
+            target += delta;
+            if (!raf) raf = requestAnimationFrame(type);
           }
         });
-        cancelAnimationFrame(flush);
-        flush = 0;
-        buffered = "";
+        target = text;
+        done = true;
+        if (shown < target.length) {
+          // Let the typewriter finish the last characters before settling.
+          await new Promise<void>((resolve) => {
+            settle = resolve;
+            if (!raf) raf = requestAnimationFrame(type);
+          });
+        }
+        cancelAnimationFrame(raf);
         patch({ content: text, pending: false });
         if (health === "offline") setHealth(null);
         const result = outcome.meta;
@@ -182,7 +207,7 @@ export function ArchiveChat({ chat, seed }: Props) {
                 <p className="fest-chat__who">{m.role === "user" ? "You" : chat.bot.name}</p>
                 <div className="fest-chat__bubble">
                   {m.pending && !m.content ? (
-                    <span className="fest-chat__thinking" aria-label={`${chat.bot.name} is thinking`}>
+                    <span className="fest-chat__thinking" role="status" aria-label={`${chat.bot.name} is typing`}>
                       <i />
                       <i />
                       <i />
