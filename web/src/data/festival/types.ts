@@ -65,7 +65,7 @@ export type FestivalCard = {
    * caption under it. Without `src` a chalk placeholder frame is drawn, so
    * the slot is visible before the photo exists. Replaces the detail list.
    */
-  photo?: { src?: string; caption: string; alt?: string };
+  photo?: { src?: string; caption: string; alt?: string; fit?: "cover" | "contain" };
 };
 
 export type NoteBlock = { title: string; items: { q: string; a: string }[] };

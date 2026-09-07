@@ -10,7 +10,8 @@ const LIVE = {
 };
 
 /**
- * Photos: drop the file in public/festival/magnara/photos/ and set `photo.src` on the card (2026-09-07).
+ * Photos come from the Framer portfolio's work pages (dhruvsportfoliob.framer.website/work/…),
+ * saved as WebP in public/festival/magnara/photos/ (2026-09-07).
  * Magnara · Projects & research · "What has he built and researched?"
  * (Swapped with Verdance on 2026-09-07: Magnara carries the projects, Verdance the story.)
  * Projects are the main body; the published research is the deeper layer.
@@ -96,7 +97,7 @@ export const magnara: FestivalContent = {
       lockup: ["Snap", "Class"],
       meta: ["2026 · 3 to 4 weeks", "Streamlit · SVM · dlib · PyDub"],
       button: { label: "View project", href: LIVE.snapclass },
-      photo: { caption: "SnapClass · AI attendance through facial recognition and voice authentication" },
+      photo: { src: "/festival/magnara/photos/snapclass.webp", alt: "SnapClass cover art", caption: "SnapClass · AI-powered attendance through facial recognition and voice authentication, live on Streamlit" },
       tabs: [
         { label: "Tools used", lead: "AI-powered attendance:", items: ["Streamlit full-stack app", "SVM facial recognition over dlib features", "Voice authentication with PyDub", "Password hashing for secure accounts"] },
         { label: "What it does", lead: "For teachers:", text: "Automates classroom attendance through facial recognition and voice authentication. Teachers create and manage classes; attendance takes seconds instead of a roll call." }
@@ -105,9 +106,9 @@ export const magnara: FestivalContent = {
     },
     {
       lockup: ["Research", "System"],
-      meta: ["2026 · 3 to 4 weeks", "LangChain · Groq · Tavily"],
+      meta: ["Jul 2026 · 3 to 4 weeks", "LangChain · Groq Llama 3.3 70B · Tavily"],
       button: { label: "View project", href: LIVE.research },
-      photo: { caption: "Multi-Agent Research System · four agents that search, read, write and critique" },
+      photo: { src: "/festival/magnara/photos/research-system.webp", alt: "Multi-Agent Research System cover art", caption: "Multi-Agent Research System · a Search, Reader, Writer and Critic agent turn a question into a scored research report" },
       tabs: [
         { label: "Tools used", lead: "A team of specialised agents:", items: ["Search Agent · Tavily Search", "Reader Agent · BeautifulSoup", "Writer Agent · structured report", "Critic Agent · score, strengths, weaknesses", "Groq Llama 3.3 70B on LangChain"] },
         { label: "What it does", lead: "Research on autopilot:", text: "Searches the web, reads reliable sources, writes a structured report and critiques its own output, so the result is more accurate and trustworthy than a single LLM answer." }
@@ -116,9 +117,9 @@ export const magnara: FestivalContent = {
     },
     {
       lockup: ["Hackathon", "Platform"],
-      meta: ["2026 · 1 week", "Get Set Learn · Supabase · Agno"],
+      meta: ["Jun 2026 · 1 week", "Get Set Learn · Streamlit · Supabase · RAG · Agno"],
       button: { label: "View project", href: LIVE.hackathon },
-      photo: { caption: "Hackathon Management Platform · built in one week for Get Set Learn" },
+      photo: { src: "/festival/magnara/photos/hackathon.webp", alt: "STEM Hackathon platform header", caption: "Hackathon Management Platform · discover, register, pay and get receipts, with a RAG assistant that answers the rules · built in one week for Get Set Learn" },
       tabs: [
         { label: "Tools used", lead: "Python, Streamlit, Supabase, RAG, Agno:", items: ["Discover hackathons and register in a few clicks", "Secure payment and instant receipt download", "Get Set Learn AI Assistant: a RAG chatbot over the docs, FAQs and guidelines", "Playful K-12 visual style"] },
         { label: "What it does", lead: "For students, teachers and organisers:", text: "One end-to-end hackathon workflow, with an assistant that answers questions about eligibility, schedules, rules and judging in seconds." }
@@ -127,9 +128,9 @@ export const magnara: FestivalContent = {
     },
     {
       lockup: ["My", "ChessBot"],
-      meta: ["2024 → ongoing", "Stockfish · PGN · Streamlit"],
+      meta: ["Sep 2024 → ongoing", "Stockfish · PGN · Streamlit"],
       button: { label: "View source", href: LIVE.chessbot },
-      photo: { caption: "MyChessBot · a chess engine that learns my own playing style" },
+      photo: { src: "/festival/magnara/photos/chessbot.webp", alt: "Dhruv's Chess Bot cover art", caption: "MyChessBot · learns my playing style from my own PGN games and plays it through Stockfish · interface redesign in progress" },
       tabs: [
         { label: "Tools used", lead: "An engine that plays like me:", items: ["A model trained on my own PGN games", "Stockfish for strength", "An interactive Streamlit board", "Interface redesign in progress"] },
         { label: "What it does", lead: "Human-like gameplay:", text: "Keeps strong, accurate play while preserving my strategies and move preferences. A live demo opens once the redesign is complete." }
@@ -138,25 +139,14 @@ export const magnara: FestivalContent = {
     },
     {
       lockup: ["Published", "research"],
-      meta: ["Zenodo · DOI 10.5281/zenodo.20352667", "WebRTC · MediaPipe · CVZone · Random Forest"],
+      meta: ["Mar 2026 · Zenodo · DOI 10.5281/zenodo.20352667", "WebRTC · MediaPipe · CVZone · Random Forest"],
       button: { label: "Read research", href: LIVE.paper },
-      photo: { caption: "Published research · real-time sign language support on video calls, 98.2% accuracy" },
+      photo: { src: "/festival/magnara/photos/sign-language.webp", alt: "Pipeline of the sign language support system", fit: "contain", caption: "Published research · real-time sign language support on video calls: hand landmarks to text and speech at 98.2% accuracy" },
       tabs: [
         { label: "How it works", lead: "Real-time sign language support on video calls:", items: ["WebRTC carries the video call", "MediaPipe and CVZone extract hand landmarks", "A Random Forest classifier recognises the gesture", "Gesture → text → speech for the listener; speech → text for the signer", "98.2% accuracy, low latency on consumer hardware"] },
         { label: "The problem", lead: "Accessibility on ordinary calls:", text: "Deaf and hard-of-hearing people are cut out of everyday video calls. Landmark-based recognition instead of raw images keeps the system lightweight, robust to varying environments, and fast enough for real-time two-way communication. The same project won the Aavishkar Zonal Round in 2025." }
       ],
       patch: 47
-    },
-    {
-      lockup: ["Vision", "& voice"],
-      meta: ["Experiments inside the projects", "Faces · voices · hands"],
-      button: { label: "View skills", href: "/ferrin" },
-      photo: { caption: "Vision & voice · faces, voices and hands, the experiments inside the projects" },
-      tabs: [
-        { label: "What I tried", lead: "Recognition work across the projects:", items: ["Facial recognition · SVM over dlib face features (SnapClass)", "Voice authentication · PyDub audio (SnapClass)", "Hand-landmark gesture recognition · MediaPipe, CVZone, Random Forest (research)", "AI agents · search, reader, writer, critic roles (research system)"] },
-        { label: "What I learned", lead: "The thread through all of them:", text: "Features beat pixels. Landmarks, face descriptors and audio features are lighter and more robust than raw images, and they run on the hardware people already own." }
-      ],
-      patch: 48
     }
   ],
   info: {

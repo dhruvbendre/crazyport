@@ -236,7 +236,13 @@ function StageCard({ content, card, index }: { content: FestivalContent; card: F
           {card.photo ? (
             <figure className="fest-card__photo">
               {card.photo.src ? (
-                <img src={card.photo.src} alt={card.photo.alt ?? card.photo.caption} loading="lazy" decoding="async" />
+                <img
+                  src={card.photo.src}
+                  alt={card.photo.alt ?? card.photo.caption}
+                  loading="lazy"
+                  decoding="async"
+                  style={card.photo.fit === "contain" ? { objectFit: "contain" } : undefined}
+                />
               ) : (
                 <span className="fest-card__photo-slot" aria-hidden="true">
                   <span>Photo</span>
