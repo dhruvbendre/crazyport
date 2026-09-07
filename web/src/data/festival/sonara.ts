@@ -57,8 +57,8 @@ export const sonara: FestivalContent = {
   },
   discs: {
     title: ["Top", "songs"],
-    foot: "Four records that never leave the player",
-    items: topSongs.map((s) => ({ title: s.title, artist: s.artist, note: s.note, hue: s.hue, href: s.href, audio: s.audio }))
+    foot: "Four records that never leave the player · tap one for a 30-second preview",
+    items: topSongs.map((s) => ({ title: s.title, artist: s.artist, note: s.note, hue: s.hue, href: s.href, audio: s.audio, link: s.link }))
   },
   sticker: ["Favourite", "genres:", "4 stages"],
   cards: stages.map((s, i) => ({

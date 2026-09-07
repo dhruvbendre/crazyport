@@ -1151,6 +1151,18 @@ button.fest-disc__art:focus-visible .fest-disc__svg {
   color: var(--f-ink-soft);
 }
 
+.fest-disc__link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--f-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .fest-discs__foot {
   margin: 28px 0 0;
   text-align: center;

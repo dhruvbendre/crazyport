@@ -130,6 +130,8 @@ export type FestivalContent = {
       href?: string;
       /** A playable track: tapping the disc plays it and the record spins. */
       audio?: string;
+      /** The full song elsewhere (shown as a small link under the note). */
+      link?: string;
     }[];
   };
   /**

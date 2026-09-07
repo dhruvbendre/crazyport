@@ -480,6 +480,11 @@ export function FestivalPage({ content, theme, planet }: Props) {
                     <h3 className="fest-disc__title">{d.title}</h3>
                     <p className="fest-disc__artist">{d.artist}</p>
                     <p className="fest-disc__note">{d.note}</p>
+                    {d.link && (
+                      <a className="fest-disc__link" href={d.link} target="_blank" rel="noreferrer">
+                        Full song on Apple Music
+                      </a>
+                    )}
                   </li>
                 );
               })}

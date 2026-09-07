@@ -124,8 +124,10 @@ export const onRepeat = {
 /**
  * The four records on Sonara's page: the top songs, each drawn as a crayon
  * disc in the same family as the planet. `hue` picks the disc palette
- * (art/DiscArt). `audio` is the track itself under public/festival/sonara/audio;
- * tapping the disc plays it and the record spins while it does.
+ * (art/DiscArt). `audio` is what plays when the disc is tapped: the official
+ * 30-second preview Apple publishes for every track (the full songs are
+ * copyrighted, so they are not served from this site); `link` opens the full
+ * song on Apple Music.
  */
 export type TopSong = {
   title: string;
@@ -133,17 +135,45 @@ export type TopSong = {
   note: string;
   hue: "pink" | "cyan" | "lavender" | "teal" | "yellow";
   href?: string;
-  /** Playable file, relative to the site root. */
+  /** Playable preview URL. */
   audio?: string;
+  /** The full song, on Apple Music. */
+  link?: string;
 };
 
-export const SONARA_AUDIO_ROOT = "/festival/sonara/audio";
-
 export const topSongs: TopSong[] = [
-  { title: "I Don't Care", artist: "Ed Sheeran & Justin Bieber", note: "The one that goes on first.", hue: "cyan", audio: `${SONARA_AUDIO_ROOT}/dont-care.mp3` },
-  { title: "High on Life", artist: "Martin Garrix ft. Bonn", note: "Deploy-day energy, volume up.", hue: "lavender", audio: `${SONARA_AUDIO_ROOT}/high-on-life.mp3` },
-  { title: "Lost", artist: "Frank Ocean", note: "Late nights, last bug standing.", hue: "teal", audio: `${SONARA_AUDIO_ROOT}/lost.mp3` },
-  { title: "Nothing's Gonna Stop Us Now", artist: "Starship", note: "For when the build finally passes.", hue: "yellow", audio: `${SONARA_AUDIO_ROOT}/nothings-gonna-stop-us-now.mp3` }
+  {
+    title: "I Don't Care",
+    artist: "Ed Sheeran & Justin Bieber",
+    note: "The one that goes on first.",
+    hue: "cyan",
+    audio: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1b/d1/7c/1bd17ca5-3131-ac45-61c7-102dbff79f0b/mzaf_14520739167216852430.plus.aac.p.m4a",
+    link: "https://music.apple.com/us/album/i-dont-care/1464549183?i=1464549844"
+  },
+  {
+    title: "High on Life",
+    artist: "Martin Garrix ft. Bonn",
+    note: "Deploy-day energy, volume up.",
+    hue: "lavender",
+    audio: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/80/1d/43/801d43b5-119c-ec82-4870-ca0d4790fdd0/mzaf_13326355349152042468.plus.aac.p.m4a",
+    link: "https://music.apple.com/us/album/high-on-life-feat-bonn/1416740613?i=1416740913"
+  },
+  {
+    title: "Lost",
+    artist: "Frank Ocean",
+    note: "Late nights, last bug standing.",
+    hue: "teal",
+    audio: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/de/9f/f5/de9ff5de-18d7-f7df-0105-ae67d419879f/mzaf_14639439664675713057.plus.aac.p.m4a",
+    link: "https://music.apple.com/us/album/lost/1440765580?i=1440766784"
+  },
+  {
+    title: "Nothing's Gonna Stop Us Now",
+    artist: "Starship",
+    note: "For when the build finally passes.",
+    hue: "yellow",
+    audio: "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4c/0d/dd/4c0ddd3f-c299-103a-8bc7-88f239ccdacf/mzaf_6655530367628828214.plus.aac.p.m4a",
+    link: "https://music.apple.com/us/album/nothings-gonna-stop-us-now/1446278327?i=1446278331"
+  }
 ];
 
 export type NoteBlock = {
