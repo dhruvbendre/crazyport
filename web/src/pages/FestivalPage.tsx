@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useGSAP } from "../motion/gsapSetup";
-import { HOME_ROUTE, journeyOrder, planetById, SIGNAL_ROUTE, type PlanetConfig } from "../data/planets";
+import { HOME_ROUTE, journeyOrder, planetById, planetHref, SIGNAL_ROUTE, type PlanetConfig } from "../data/planets";
 import type { FestivalCard, FestivalContent } from "../data/festival/types";
 import { profiles } from "../data/portfolio";
 import { site } from "../config/site";
@@ -230,7 +230,7 @@ export function FestivalPage({ content, theme, planet }: Props) {
     const index = journeyOrder.indexOf(planet.id);
     if (index < 0 || index === journeyOrder.length - 1) return { label: "Next · Signal · About & contact", to: SIGNAL_ROUTE };
     const next = planetById[journeyOrder[index + 1]];
-    return { label: `Next · ${next.name} · ${next.descriptor}`, to: next.route };
+    return { label: `Next · ${next.name} · ${next.descriptor}`, to: planetHref(next) };
   })();
 
   const tiers = [1, 2, 3, 4, 5] as const;
@@ -487,9 +487,15 @@ export function FestivalPage({ content, theme, planet }: Props) {
               <br />
               {content.footer.big[1]}
             </p>
-            <Link className="fest-btn fest-btn--yellow" to={nextLink.to}>
-              {nextLink.label}
-            </Link>
+            {/^https?:/.test(nextLink.to) ? (
+              <a className="fest-btn fest-btn--yellow" href={nextLink.to}>
+                {nextLink.label}
+              </a>
+            ) : (
+              <Link className="fest-btn fest-btn--yellow" to={nextLink.to}>
+                {nextLink.label}
+              </Link>
+            )}
           </div>
           <div className="fest-footer__logo" aria-hidden="true">
             <span>{content.footer.logo[0]}</span>

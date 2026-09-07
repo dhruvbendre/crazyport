@@ -17,6 +17,8 @@
  * Positions and sizes live in sceneLayouts.ts because they differ per
  * breakpoint. Interior content lives in data/festival/<slug>.ts.
  */
+import { site } from "../config/site";
+
 export type PlanetId =
   | "mercury"
   | "venus"
@@ -65,7 +67,11 @@ export type PlanetConfig = {
   ariaLabel: string;
   /** Conceptual introduction to the world. */
   intro: string;
-  /** True for the world whose interior is a separate application (Mnemora). */
+  /**
+   * True for the world whose interior is a separate application (Mnemora):
+   * clicking it leaves the portfolio for `site.archiveUrl`, the Roro
+   * Streamlit app, instead of a route.
+   */
   external?: boolean;
   /**
    * Interior style marker. Since 2026-09-05 every world's interior is a
@@ -309,3 +315,11 @@ export const ARCHIVE_PLANET_ID: PlanetId = "neptune";
 export const HOME_ROUTE = "/";
 export const SIGNAL_ROUTE = "/signal";
 export const ART_TEST_ROUTE = "/art-test";
+
+/**
+ * Where a planet leads: its route, or for an external world the archive
+ * app's URL (falls back to the route if no archive URL is configured).
+ */
+export function planetHref(planet: PlanetConfig): string {
+  return planet.external && site.archiveUrl ? site.archiveUrl : planet.route;
+}

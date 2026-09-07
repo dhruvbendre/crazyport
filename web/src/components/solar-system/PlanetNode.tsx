@@ -1,5 +1,5 @@
 import { useCallback, useMemo, type MouseEvent, type ReactNode } from "react";
-import type { PlanetConfig } from "../../data/planets";
+import { planetHref, type PlanetConfig } from "../../data/planets";
 import { PLANET_ART } from "../../art/PlanetArtRegistry";
 import { ArtFrame } from "./ArtFrame";
 import { ChalkOutline } from "./ChalkOutline";
@@ -64,7 +64,7 @@ export function PlanetNode({ planet, children }: Props) {
     >
       {children}
       <a
-        href={planet.route}
+        href={planetHref(planet)}
         className="planet-link"
         aria-label={planet.ariaLabel}
         data-planet={planet.id}
