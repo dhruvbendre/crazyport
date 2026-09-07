@@ -1225,6 +1225,33 @@ button.fest-disc__art:focus-visible .fest-disc__svg {
   gap: 8px;
 }
 
+/* The organisation's real logo on a small paper tile above the lockup. */
+.fest-card__logo {
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 64px;
+  padding: 8px 12px;
+  margin: 0 0 4px;
+  background: var(--f-white);
+  border: 2px solid var(--f-ink);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--f-ink);
+  transform: rotate(-1.2deg);
+  overflow: hidden;
+}
+
+.fest-card__logo--dark {
+  background: var(--f-ink);
+}
+
+.fest-card__logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .fest-card__lockup {
   margin: 0 0 8px;
   display: flex;

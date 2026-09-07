@@ -55,6 +55,11 @@ export type FestivalCard = {
   patch: number;
   /** Optional image shown in the card (screenshot, certificate). Prefer assets.cardImages. */
   image?: string;
+  /**
+   * The organisation's real logo, shown in a tile above the lockup. `dark`
+   * puts it on an ink tile for marks drawn in white.
+   */
+  logo?: { src: string; alt: string; dark?: boolean };
 };
 
 export type NoteBlock = { title: string; items: { q: string; a: string }[] };

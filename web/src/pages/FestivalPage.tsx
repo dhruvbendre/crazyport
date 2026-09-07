@@ -172,6 +172,11 @@ function StageCard({ content, card, index }: { content: FestivalContent; card: F
       <div className="fest-card__paper">
         <ChalkFrame seed={500 + index * 17} weight={2.2} inset={7} dust={10} />
         <div className="fest-card__left">
+          {card.logo && (
+            <span className={`fest-card__logo${card.logo.dark ? " fest-card__logo--dark" : ""}`}>
+              <img src={card.logo.src} alt={card.logo.alt} loading="lazy" />
+            </span>
+          )}
           <h3 className="fest-card__lockup">
             {card.lockup.map((w) => (
               <span key={w}>{w}</span>
