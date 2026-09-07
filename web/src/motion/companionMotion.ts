@@ -95,13 +95,63 @@ export function createCompanionMotion(o: Options): CompanionMotion {
   let seated = false;
   let placed = false;
 
+  // Geometry the tick needs, measured outside the frame loop. The viewport,
+  // the document height and the seat's position only change on resize or when
+  // the page reflows, so they are cached and refreshed by observers instead of
+  // read back from layout on every frame (scrollHeight and
+  // getBoundingClientRect both force a synchronous layout).
+  let vw = window.innerWidth;
+  let vh = window.innerHeight;
+  let maxScroll = 1;
+  let marginPx = margin();
+  let [rangeTop, rangeFoot] = range();
+  let seat: HTMLElement | null = null;
+  let seatTop = 0; // document-space
+  let seatLeft = 0;
+  let seatWidth = 0;
+  let seatHeight = 0;
+  let measureQueued = 0;
+
+  const measure = () => {
+    measureQueued = 0;
+    vw = window.innerWidth;
+    vh = window.innerHeight;
+    marginPx = margin();
+    [rangeTop, rangeFoot] = range();
+    maxScroll = Math.max(1, document.documentElement.scrollHeight - vh);
+    seat = document.querySelector<HTMLElement>(SEAT_SELECTOR);
+    if (seat) {
+      const r = seat.getBoundingClientRect();
+      seatTop = r.top + window.scrollY;
+      seatLeft = r.left;
+      seatWidth = r.width;
+      seatHeight = r.height;
+    }
+  };
+  // Batch the many reflow notifications a page can fire while it settles.
+  const queueMeasure = () => {
+    if (!measureQueued) measureQueued = requestAnimationFrame(measure);
+  };
+  measure();
+  window.addEventListener("resize", queueMeasure, { passive: true });
+  window.addEventListener("orientationchange", queueMeasure, { passive: true });
+  // Content settling (fonts, images, chat transcript growing) changes the
+  // document height and the seat's place.
+  const bodyObserver = new ResizeObserver(queueMeasure);
+  bodyObserver.observe(document.body);
+  if (seat) bodyObserver.observe(seat);
+  // Late-arriving seat (the page mounts the chat after the companion).
+  const seatWatch = window.setInterval(() => {
+    const now = document.querySelector<HTMLElement>(SEAT_SELECTOR);
+    if (now !== seat) {
+      if (now) bodyObserver.observe(now);
+      queueMeasure();
+    }
+  }, 1000);
+
   const tick = (_time: number, deltaMs: number) => {
     const dt = Math.min(deltaMs / 1000, 0.05);
     t += dt;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    const doc = document.documentElement;
-    const maxScroll = Math.max(1, doc.scrollHeight - vh);
     const scroll = window.scrollY;
     const progress = clamp(scroll / maxScroll, 0, 1);
 
@@ -112,17 +162,18 @@ export function createCompanionMotion(o: Options): CompanionMotion {
     const speed = Math.abs(velocity);
 
     // Is there a seat on screen? Then that is where the companion belongs.
-    const seat = document.querySelector<HTMLElement>(SEAT_SELECTOR);
+    // Its viewport position is the cached document position minus the scroll.
     let targetX: number;
     let targetY: number;
     let docked = false;
     if (seat) {
-      const r = seat.getBoundingClientRect();
-      const visible = r.top < vh * 0.9 && r.bottom > vh * 0.1;
+      const top = seatTop - scroll;
+      const bottom = top + seatHeight;
+      const visible = top < vh * 0.9 && bottom > vh * 0.1;
       if (visible) {
         docked = true;
-        targetX = r.left + r.width / 2;
-        targetY = r.top + r.height / 2;
+        targetX = seatLeft + seatWidth / 2;
+        targetY = top + seatHeight / 2;
       }
     }
     if (!docked) {
@@ -131,9 +182,8 @@ export function createCompanionMotion(o: Options): CompanionMotion {
       const half = o.size / 2;
       const sway = Math.sin(progress * Math.PI * 2.5) * Math.min(vw * 0.035, 46);
       const drift = { x: Math.sin(t * 0.7) * 3, y: Math.cos(t * 0.5) * 4 };
-      targetX = vw - margin() - half - Math.abs(sway) * 0.5 - sway * 0.5 + drift.x;
-      const [top, foot] = range();
-      targetY = lerp(vh * top, vh * foot, progress) + drift.y;
+      targetX = vw - marginPx - half - Math.abs(sway) * 0.5 - sway * 0.5 + drift.x;
+      targetY = lerp(vh * rangeTop, vh * rangeFoot, progress) + drift.y;
     }
     if (!placed) {
       placed = true;
@@ -167,6 +217,11 @@ export function createCompanionMotion(o: Options): CompanionMotion {
       // The quickTo tweens die with their elements; killing them here only
       // makes GSAP warn about resetting x / y.
       gsap.ticker.remove(tick);
+      cancelAnimationFrame(measureQueued);
+      window.removeEventListener("resize", queueMeasure);
+      window.removeEventListener("orientationchange", queueMeasure);
+      bodyObserver.disconnect();
+      window.clearInterval(seatWatch);
     }
   };
 }

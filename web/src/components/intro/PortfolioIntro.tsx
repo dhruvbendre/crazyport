@@ -1,9 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "../../motion/gsapSetup";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { hasVisitedUniverse } from "../../motion/orbitState";
 import { chalkRing, chalkRule } from "../../art/chalk";
-import { BloimBackground } from "@/components/ui/bloim-animation-background";
+import { measureIntroQuality } from "../../motion/introQuality";
+
+/**
+ * The Unicorn Studio scene carries its whole WebGL SDK (~1.2 MB) inside the
+ * package, so it is loaded on demand: only a first visit ever fetches or
+ * compiles it, and it lands in its own chunk instead of the main bundle.
+ */
+const BloimBackground = lazy(() =>
+  import("@/components/ui/bloim-animation-background").then((m) => ({ default: m.BloimBackground }))
+);
 
 export type PortfolioIntroProps = {
   name: string;
@@ -74,6 +83,19 @@ export function PortfolioIntro({ name, onComplete, focal }: PortfolioIntroProps)
   const reducedMotion = useReducedMotion();
   const [sceneState, setSceneState] = useState<"loading" | "ready" | "failed">("loading");
   const [viewport, setViewport] = useState(() => ({ w: window.innerWidth, h: window.innerHeight }));
+  // "full" keeps the crayon displacement over the live scene; "lite" is the
+  // phone treatment (posterised colour only), chosen when the frames prove
+  // the device cannot carry the filter. Never changes the choreography.
+  const [quality, setQuality] = useState<"full" | "lite">("full");
+
+  // Quality governor: while the ring draws and the name writes (a quiet
+  // stretch before the push), watch the frame cadence. Sustained slow frames
+  // mean the displacement filter is fighting the WebGL canvas, so drop to the
+  // lite treatment before the camera moves. Decides once.
+  useEffect(() => {
+    if (sceneState !== "ready" || reducedMotion) return;
+    return measureIntroQuality((tier) => setQuality(tier));
+  }, [sceneState, reducedMotion]);
 
   useEffect(() => {
     const onResize = () =>
@@ -154,15 +176,22 @@ export function PortfolioIntro({ name, onComplete, focal }: PortfolioIntroProps)
       gsap.set(ringEl, { scale: 1 });
 
       // The portal: a hole in the intro that opens from the focal point, with
-      // the chalk ring riding on its rim.
+      // the chalk ring riding on its rim. The mask itself is declared once in
+      // CSS (.portfolio-intro[data-portal]) and only its radius custom
+      // properties change per frame. (gsap.getProperty reads GSAP's own
+      // transform cache, not the DOM, so it is not a layout read.)
       const vmax = Math.max(window.innerWidth, window.innerHeight) / 100;
       const portal = { r: 0 };
+      root.style.setProperty("--portal-x", fx);
+      root.style.setProperty("--portal-y", fy);
       const applyPortal = () => {
-        const edge = `${portal.r.toFixed(2)}vmax`;
-        const soft = `${Math.max(0, portal.r - 14).toFixed(2)}vmax`;
-        const mask = portal.r <= 0 ? "none" : `radial-gradient(circle at ${fx} ${fy}, transparent ${soft}, black ${edge})`;
-        root.style.maskImage = mask;
-        root.style.webkitMaskImage = mask;
+        if (portal.r <= 0) {
+          root.removeAttribute("data-portal");
+          return;
+        }
+        root.setAttribute("data-portal", "");
+        root.style.setProperty("--portal-edge", `${portal.r.toFixed(2)}vmax`);
+        root.style.setProperty("--portal-soft", `${Math.max(0, portal.r - 14).toFixed(2)}vmax`);
         const rim = (portal.r * vmax) / ringRadius;
         if (rim > Number(gsap.getProperty(ringEl, "scale"))) gsap.set(ringEl, { scale: rim });
       };
@@ -237,7 +266,7 @@ export function PortfolioIntro({ name, onComplete, focal }: PortfolioIntroProps)
   const cy = viewport.h / 2;
 
   return (
-    <div ref={rootRef} className="portfolio-intro" data-scene={sceneState} onClick={skip}>
+    <div ref={rootRef} className="portfolio-intro" data-scene={sceneState} data-quality={quality} onClick={skip}>
       {/* The crayon treatment for the scene: posterised colour with wobbled edges. */}
       <svg className="portfolio-intro__filters" aria-hidden="true" focusable="false">
         <defs>
@@ -255,11 +284,13 @@ export function PortfolioIntro({ name, onComplete, focal }: PortfolioIntroProps)
 
       {/* 1 · the scene, drawn in crayon */}
       <div ref={unicornRef} className="portfolio-intro__unicorn">
-        <BloimBackground
-          className="portfolio-intro__scene"
-          onLoad={() => setSceneState("ready")}
-          onError={() => setSceneState((s) => (s === "loading" ? "failed" : s))}
-        />
+        <Suspense fallback={null}>
+          <BloimBackground
+            className="portfolio-intro__scene"
+            onLoad={() => setSceneState("ready")}
+            onError={() => setSceneState((s) => (s === "loading" ? "failed" : s))}
+          />
+        </Suspense>
       </div>
 
       {/* 2 · paper: the tooth of the board, over everything the crayon touches */}

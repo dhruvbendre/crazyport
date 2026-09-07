@@ -87,6 +87,7 @@ export function createEnvironmentMotion({ svg, layout, reducedMotion }: Options)
   /* ---- meteor: occasional surprise ---------------------------------------- */
   const meteor = svg.querySelector<SVGGElement>("[data-meteor]");
   let meteorCall: gsap.core.Tween | null = null;
+  let meteorTl: gsap.core.Timeline | null = null;
   if (meteor && !reducedMotion) {
     const mrng = createRng(layout.stars.seed + 7);
     const mp = getTransformProxy(meteor);
@@ -114,20 +115,22 @@ export function createEnvironmentMotion({ svg, layout, reducedMotion }: Options)
       mp.y = sy;
       mp.rotation = angle;
       mp.apply();
+      // One meteor timeline and one pending call are alive at a time; the
+      // previous run is released instead of accumulating for the session.
+      meteorTl?.kill();
       const tl = gsap.timeline({
         onComplete: () => {
+          meteorCall?.kill();
           meteorCall = gsap.delayedCall(mrng.range(9, 18), runMeteor);
-          calls.push(meteorCall);
         }
       });
+      meteorTl = tl;
       tl.set(meteor, { opacity: 0 }, 0);
       tl.to(meteor, { opacity: 1, duration: dur * 0.2, ease: "power1.out" }, 0);
       tl.to(mp, { x: sx + dx, y: sy + dy, duration: dur, ease: "none", onUpdate: mp.apply }, 0);
       tl.set(meteor, { opacity: 0 }, dur);
-      tweens.push(tl);
     };
     meteorCall = gsap.delayedCall(1.1, runMeteor);
-    calls.push(meteorCall);
   } else if (meteor) {
     // Reduced motion: a single meteor frozen mid-flight as part of the drawing.
     const { from, travel } = layout.meteor;
@@ -207,6 +210,7 @@ export function createEnvironmentMotion({ svg, layout, reducedMotion }: Options)
       for (const t of tweens) t.kill();
       for (const c of calls) c.kill();
       meteorCall?.kill();
+      meteorTl?.kill();
     }
   };
 }

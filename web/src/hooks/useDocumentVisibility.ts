@@ -8,16 +8,23 @@ import { gsap } from "gsap";
  */
 export function useDocumentVisibility(): void {
   useEffect(() => {
+    // The global timeline holds the tweens; gsap.ticker.add() callbacks (the
+    // cursor saucer, the scroll companion) live outside it, so the ticker is
+    // put to sleep as well or they would keep computing against frozen tweens
+    // and jump on return.
     const onVisibility = () => {
       if (document.hidden) {
         gsap.globalTimeline.pause();
+        gsap.ticker.sleep();
       } else {
+        gsap.ticker.wake();
         gsap.globalTimeline.resume();
       }
     };
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       document.removeEventListener("visibilitychange", onVisibility);
+      gsap.ticker.wake();
       gsap.globalTimeline.resume();
     };
   }, []);

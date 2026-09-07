@@ -1,3 +1,4 @@
+import { memo } from "react";
 /**
  * Shared SVG definitions for the master scene: crayon roughness for orbit
  * lines, a faint paper grain for the space field, and the two chalk finishes.
@@ -31,7 +32,7 @@ export function ChalkDefs() {
   );
 }
 
-export function SceneDefs() {
+function SceneDefsInner() {
   return (
     <>
       <CrayonDefs />
@@ -53,3 +54,9 @@ export function SceneDefs() {
     </>
   );
 }
+
+/**
+ * Static once built for a layout: memoised so the scene's own state changes
+ * (hint, interactivity, unit scale) never re-diff these hundreds of nodes.
+ */
+export const SceneDefs = memo(SceneDefsInner);

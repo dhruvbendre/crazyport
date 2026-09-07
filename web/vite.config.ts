@@ -25,6 +25,10 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes("node_modules/gsap") || id.includes("@gsap")) return "gsap";
           if (id.includes("node_modules/react")) return "react";
+          // The Unicorn Studio SDK (~1.2 MB) only ever loads for a first visit.
+          if (id.includes("node_modules/unicornstudio")) return "unicorn";
+          // The companion avatar runtime is only needed on world pages.
+          if (id.includes("@bible-strong/avatar")) return "avatar";
           return undefined;
         }
       }

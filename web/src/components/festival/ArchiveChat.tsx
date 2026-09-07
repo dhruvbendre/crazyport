@@ -82,11 +82,15 @@ export function ArchiveChat({ chat, seed }: Props) {
     return () => controller.abort();
   }, []);
 
-  // Keep the newest turn in view as it streams.
+  // Keep the newest turn in view as it streams. While tokens arrive the
+  // scroll is instant (a smooth scroll restarted on every frame never lands);
+  // the finished turn gets one smooth settle. Reads of scrollHeight happen
+  // once per committed render, never per token.
   useEffect(() => {
     const log = logRef.current;
     if (!log) return;
-    log.scrollTo({ top: log.scrollHeight, behavior: "smooth" });
+    const last = messages[messages.length - 1];
+    log.scrollTo({ top: log.scrollHeight, behavior: last?.pending ? "auto" : "smooth" });
   }, [messages]);
 
   const send = useCallback(
@@ -104,13 +108,29 @@ export function ArchiveChat({ chat, seed }: Props) {
 
       try {
         const outcome: { meta: ArchiveMeta | null } = { meta: null };
+        // Tokens are gathered and committed once per animation frame instead
+        // of one React render per token.
+        let buffered = "";
+        let flush = 0;
+        const commit = () => {
+          flush = 0;
+          const chunk = buffered;
+          buffered = "";
+          if (chunk) setMessages((prev) => prev.map((m) => (m.id === answerId ? { ...m, content: m.content + chunk } : m)));
+        };
         const text = await askArchive(question, history, {
           onMeta: (meta) => {
             outcome.meta = meta;
             patch({ meta });
           },
-          onDelta: (delta) => setMessages((prev) => prev.map((m) => (m.id === answerId ? { ...m, content: m.content + delta } : m)))
+          onDelta: (delta) => {
+            buffered += delta;
+            if (!flush) flush = requestAnimationFrame(commit);
+          }
         });
+        cancelAnimationFrame(flush);
+        flush = 0;
+        buffered = "";
         patch({ content: text, pending: false });
         if (health === "offline") setHealth(null);
         const result = outcome.meta;

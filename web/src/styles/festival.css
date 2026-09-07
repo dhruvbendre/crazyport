@@ -569,6 +569,8 @@
 .fest-card__image {
   width: 100%;
   height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
   margin: 0 0 12px;
   border: 2px solid var(--f-ink);
 }
@@ -1083,6 +1085,11 @@ button.fest-disc__art:focus-visible .fest-disc__svg {
 
 .fest-disc[data-playing="true"] .fest-disc__spin {
   animation: fest-disc-spin 2.2s linear infinite;
+}
+
+/* Off-screen: the record keeps its phase but stops repainting. */
+.fest-discs[data-offscreen="true"] .fest-disc__spin {
+  animation-play-state: paused;
 }
 
 .fest-disc[data-playing="true"] .fest-disc__index {
@@ -1896,6 +1903,9 @@ button.fest-disc__art:focus-visible .fest-disc__svg {
   top: 0;
   filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.28));
   transform-origin: 50% 50%;
+  /* Own layer: GSAP banks and breathes this every frame, so the shadow filter
+     is composited instead of re-rasterising the avatar per transform. */
+  will-change: transform;
 }
 
 .companion__avatar {

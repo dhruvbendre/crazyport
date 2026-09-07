@@ -10,6 +10,8 @@ import { createEnvironmentMotion } from "../../motion/environmentMotion";
 import { createCursorMotion } from "../../motion/cursorMotion";
 import { createPlanetInteraction, type InteractionSource, type PlanetInteractionController } from "../../motion/planetInteraction";
 import { createPlanetProximity } from "../../motion/planetProximity";
+import { createStageGeometry } from "../../motion/stageGeometry";
+import { prefetchWorldPages } from "../../app/lazyPages";
 import { consumeReturning, loadOrbitSnapshot, saveOrbitSnapshot } from "../../motion/orbitState";
 import { usePlanetNavigation } from "../../hooks/usePlanetNavigation";
 import { useFinePointer } from "../../hooks/useReducedMotion";
@@ -60,15 +62,19 @@ export function SolarSystemScene({ layout, scene, reducedMotion, stageRef, onLoc
   useEffect(() => {
     const svg = svgRef.current;
     if (!svg) return;
-    const measure = () => {
-      // Layout size, not the bounding box: the stage may be rotated 90° on phones.
-      const sx = svg.clientWidth / layout.viewBox.width;
-      const sy = svg.clientHeight / layout.viewBox.height;
+    // Layout size, not the bounding box: the stage may be rotated 90° on phones.
+    // The observer hands us the size it already computed, so no forced layout.
+    const measure = (width: number, height: number) => {
+      const sx = width / layout.viewBox.width;
+      const sy = height / layout.viewBox.height;
       const s = layout.preserveAspectRatio === "xMidYMid slice" ? Math.max(sx, sy) : Math.min(sx, sy);
       setUnitScale((prev) => (Math.abs(prev - s) < 0.002 ? prev : s));
     };
-    measure();
-    const ro = new ResizeObserver(measure);
+    measure(svg.clientWidth, svg.clientHeight);
+    const ro = new ResizeObserver((entries) => {
+      const box = entries[0]?.contentRect;
+      if (box) measure(box.width, box.height);
+    });
     ro.observe(svg);
     return () => ro.disconnect();
   }, [layout]);
@@ -111,12 +117,15 @@ export function SolarSystemScene({ layout, scene, reducedMotion, stageRef, onLoc
       engineRef.current?.setSlow(id, active);
       interactionRef.current?.setActive(id, active, source);
       if (active) {
+        prefetchWorldPages();
         planetHoverIn(targets);
-        setActivePlanet(id);
+        // The active id only feeds the debug panel: keep every hover in and
+        // out from re-rendering the ~1,400-element scene in production.
+        if (DEBUG_SOLAR_SYSTEM) setActivePlanet(id);
         hideHint();
       } else {
         planetHoverOut(targets);
-        setActivePlanet((prev) => (prev === id ? null : prev));
+        if (DEBUG_SOLAR_SYSTEM) setActivePlanet((prev) => (prev === id ? null : prev));
       }
     },
     [hideHint, hoverTargets]
@@ -157,13 +166,17 @@ export function SolarSystemScene({ layout, scene, reducedMotion, stageRef, onLoc
       }
 
       const environment = createEnvironmentMotion({ svg, layout, reducedMotion });
+      // One cached client→scene transform shared by every pointer system.
+      const geometry = createStageGeometry(stage, svg);
       const cursor =
-        layout.pointerParallax && finePointer && !reducedMotion ? createCursorMotion({ stage, svg }) : null;
+        layout.pointerParallax && finePointer && !reducedMotion ? createCursorMotion({ stage, svg, geometry }) : null;
       // Planet zone reactions (doodles, pulse, UFO thoughts) and the "near" ring around each body.
       const interaction = createPlanetInteraction({ svg, reducedMotion });
       interactionRef.current = interaction;
       const proximity =
-        finePointer && !reducedMotion ? createPlanetProximity({ stage, svg, onNear: (id) => interaction.setNear(id) }) : null;
+        finePointer && !reducedMotion
+          ? createPlanetProximity({ stage, svg, geometry, onNear: (id) => interaction.setNear(id) })
+          : null;
 
       onLockChange(true);
       const intro = playSceneIntro({
@@ -176,6 +189,10 @@ export function SolarSystemScene({ layout, scene, reducedMotion, stageRef, onLoc
         onInteractive: () => {
           onLockChange(false);
           setInteractive(true);
+          // Warm the world-page chunk while the visitor is still looking.
+          const idle = (window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+          if (idle) idle(() => prefetchWorldPages(), { timeout: 4000 });
+          else setTimeout(prefetchWorldPages, 2500);
         },
         onHintTime: () => {
           if (hintArmed.current) setHintVisible(true);
@@ -192,6 +209,7 @@ export function SolarSystemScene({ layout, scene, reducedMotion, stageRef, onLoc
         interaction.kill();
         interactionRef.current = null;
         cursor?.kill();
+        geometry.kill();
         environment.kill();
         engine.kill();
         engineRef.current = null;

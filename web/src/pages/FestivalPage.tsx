@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { memo, useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { useGSAP } from "../motion/gsapSetup";
 import { HOME_ROUTE, journeyOrder, planetById, SIGNAL_ROUTE, type PlanetConfig } from "../data/planets";
@@ -38,7 +38,7 @@ import { useReducedMotion } from "../hooks/useReducedMotion";
 function BoardPlanet({ content, planet, theme }: { content: FestivalContent; planet?: PlanetConfig; theme: WorldTheme }) {
   const image = content.assets?.planetImage;
   if (image) {
-    return <img className="fest-planet__img" src={image} alt={`${theme.name}, the ${theme.section} world`} />;
+    return <img className="fest-planet__img" src={image} alt={`${theme.name}, the ${theme.section} world`} decoding="async" fetchPriority="high" />;
   }
   if (planet) {
     const art = PLANET_ART[planet.id];
@@ -70,15 +70,32 @@ function BoardPlanet({ content, planet, theme }: { content: FestivalContent; pla
  * (art/DiscArt) in another palette and seed, with the chalk perimeter the
  * planets wear on the home scene.
  */
-function SongDisc({ hue, seed, label }: { hue: keyof typeof DISC_PALETTES; seed: number; label?: string }) {
-  const palette = DISC_PALETTES[hue];
-  const art: ArtMeta = {
-    Component: (props) => <DiscArt {...props} palette={palette} seed={seed} name={`disc-${hue}`} />,
-    viewBox: { width: DISC_CX * 2, height: DISC_CY * 2 },
-    center: { x: DISC_CX, y: DISC_CY },
-    bodyRadius: DISC_R,
-    extent: { left: DISC_R + 2, right: DISC_R + 2, top: DISC_R + 2, bottom: DISC_R + 2 }
-  };
+/**
+ * Art descriptors are built once per (hue, seed) and reused: a fresh
+ * `Component` identity on every render made React unmount and remount the
+ * whole drawing (~40 generated paths per disc) every time the page rendered,
+ * including the exact moment a record starts spinning.
+ */
+const DISC_ART = new Map<string, ArtMeta>();
+function discArt(hue: keyof typeof DISC_PALETTES, seed: number): ArtMeta {
+  const key = `${hue}-${seed}`;
+  let art = DISC_ART.get(key);
+  if (!art) {
+    const palette = DISC_PALETTES[hue];
+    art = {
+      Component: (props) => <DiscArt {...props} palette={palette} seed={seed} name={`disc-${hue}`} />,
+      viewBox: { width: DISC_CX * 2, height: DISC_CY * 2 },
+      center: { x: DISC_CX, y: DISC_CY },
+      bodyRadius: DISC_R,
+      extent: { left: DISC_R + 2, right: DISC_R + 2, top: DISC_R + 2, bottom: DISC_R + 2 }
+    };
+    DISC_ART.set(key, art);
+  }
+  return art;
+}
+
+const SongDisc = memo(function SongDisc({ hue, seed, label }: { hue: keyof typeof DISC_PALETTES; seed: number; label?: string }) {
+  const art = discArt(hue, seed);
   const scale = 100 / DISC_R;
   return (
     <svg className="fest-disc__svg" viewBox="0 0 260 260" role={label ? "img" : undefined} aria-label={label} aria-hidden={label ? undefined : true}>
@@ -91,7 +108,7 @@ function SongDisc({ hue, seed, label }: { hue: keyof typeof DISC_PALETTES; seed:
       </g>
     </svg>
   );
-}
+});
 
 /**
  * One shared player for the discs row: at most one record plays at a time.
@@ -100,11 +117,23 @@ function SongDisc({ hue, seed, label }: { hue: keyof typeof DISC_PALETTES; seed:
  */
 function useDiscPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const releaseRef = useRef<(() => void) | null>(null);
   const [playing, setPlaying] = useState<string | null>(null);
 
   useEffect(() => {
+    // Leaving the page or hiding the tab stops the record; a paused element
+    // is released so its decoded audio (several MB per track) is freed.
+    const onHide = () => {
+      if (document.hidden) {
+        audioRef.current?.pause();
+        setPlaying(null);
+      }
+    };
+    document.addEventListener("visibilitychange", onHide);
     return () => {
-      audioRef.current?.pause();
+      document.removeEventListener("visibilitychange", onHide);
+      releaseRef.current?.();
+      releaseRef.current = null;
       audioRef.current = null;
     };
   }, []);
@@ -120,12 +149,23 @@ function useDiscPlayer() {
       }
       return;
     }
-    current?.pause();
-    const next = new Audio(src);
-    next.dataset.src = src;
+    // Switching records: fully release the old element (listeners, buffer).
+    releaseRef.current?.();
+    const next = new Audio();
     next.preload = "auto";
-    next.addEventListener("ended", () => setPlaying((p) => (p === src ? null : p)));
-    next.addEventListener("pause", () => setPlaying((p) => (p === src && next.ended ? null : p)));
+    next.src = src;
+    next.dataset.src = src;
+    const onEnded = () => setPlaying((p) => (p === src ? null : p));
+    const onPause = () => setPlaying((p) => (p === src && next.ended ? null : p));
+    next.addEventListener("ended", onEnded);
+    next.addEventListener("pause", onPause);
+    releaseRef.current = () => {
+      next.pause();
+      next.removeEventListener("ended", onEnded);
+      next.removeEventListener("pause", onPause);
+      next.removeAttribute("src");
+      next.load();
+    };
     audioRef.current = next;
     void next.play().then(() => setPlaying(src)).catch(() => setPlaying(null));
   }, []);
@@ -192,11 +232,11 @@ function StageCard({ content, card, index }: { content: FestivalContent; card: F
           </Cta>
         </div>
         <div className="fest-card__right">
-          {image && <img className="fest-card__image" src={image} alt="" loading="lazy" />}
+          {image && <img className="fest-card__image" src={image} alt="" loading="lazy" decoding="async" />}
           {card.photo ? (
             <figure className="fest-card__photo">
               {card.photo.src ? (
-                <img src={card.photo.src} alt={card.photo.alt ?? card.photo.caption} loading="lazy" />
+                <img src={card.photo.src} alt={card.photo.alt ?? card.photo.caption} loading="lazy" decoding="async" />
               ) : (
                 <span className="fest-card__photo-slot" aria-hidden="true">
                   <span>Photo</span>
@@ -233,6 +273,19 @@ export function FestivalPage({ content, theme, planet }: Props) {
   const pageRef = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion();
   const discPlayer = useDiscPlayer();
+  // The spinning record repaints ~40 crayon paths a frame; when the row is
+  // scrolled out of view the spin is paused (and resumes at the same phase).
+  const discsRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = discsRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) delete el.dataset.offscreen;
+      else el.dataset.offscreen = "true";
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [content.discs]);
 
   useEffect(() => {
     document.title = `${theme.name} · ${theme.section} · ${site.titleSuffix}`;
@@ -386,7 +439,7 @@ export function FestivalPage({ content, theme, planet }: Props) {
 
       {/* 5b · Discs: crayon records in the planet's family (Sonara's top songs) */}
       {content.discs && (
-        <section className="fest-discs" id="discs" aria-labelledby="fest-discs-title">
+        <section className="fest-discs" id="discs" aria-labelledby="fest-discs-title" ref={discsRef}>
           <div className="fest-discs__inner">
             <h2 id="fest-discs-title" className="fest-sticker" data-enter>
               <span className="fest-sticker__wide">{content.discs.title[0]}</span> <span>{content.discs.title[1]}</span>

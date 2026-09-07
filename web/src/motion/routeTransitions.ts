@@ -138,8 +138,10 @@ export function playPlanetExit(o: PlanetExitOptions): Promise<void> {
     tl.to(proxy, { scale: 2.6, x: targetX, y: targetY, duration: 0.66, onUpdate: proxy.apply }, 0.04);
 
     // 4. the world's field spreads from the planet until it covers the screen
-    tl.set(disc, { left: screenX, top: screenY, scale: 0, opacity: 1 }, 0);
-    tl.to(disc, { left: vw / 2, top: vh / 2, duration: 0.52, ease: "power3.inOut" }, 0.12);
+    // The disc starts on the planet and travels to the viewport centre as a
+    // translation (compositor-only), never by animating left/top.
+    tl.set(disc, { left: screenX, top: screenY, x: 0, y: 0, scale: 0, opacity: 1 }, 0);
+    tl.to(disc, { x: vw / 2 - screenX, y: vh / 2 - screenY, duration: 0.52, ease: "power3.inOut" }, 0.12);
     tl.to(disc, { scale: coverScale, duration: 0.5, ease: "power3.in" }, 0.22);
     tl.set(veil, { opacity: 0, background: planet.field }, 0);
     tl.call(finish, undefined, 0.72);

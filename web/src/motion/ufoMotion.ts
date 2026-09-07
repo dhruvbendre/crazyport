@@ -87,8 +87,11 @@ export function createUfoMotion({ root, ship, flames, embers }: Options): UfoMot
     if (event.relatedTarget === null) hide();
   };
 
+  // Dead embers are written once, not on every frame afterwards.
+  const emberDead = embers.map(() => false);
+
   const tick = (_t: number, deltaMs: number) => {
-    if (!seen) return;
+    if (!seen || !visible) return;
     const dt = Math.min(deltaMs / 1000, 0.05);
     // Where the ship actually is (after its lag).
     const x = Number(gsap.getProperty(root, "x")) || 0;
@@ -143,9 +146,13 @@ export function createUfoMotion({ root, ship, flames, embers }: Options): UfoMot
     emberState.forEach((e, i) => {
       const el = embers[i];
       if (e.life <= 0) {
-        el.setAttribute("opacity", "0");
+        if (!emberDead[i]) {
+          emberDead[i] = true;
+          el.setAttribute("opacity", "0");
+        }
         return;
       }
+      emberDead[i] = false;
       e.life -= dt * 1.6;
       e.x += e.vx * dt;
       e.y += e.vy * dt;
@@ -156,9 +163,17 @@ export function createUfoMotion({ root, ship, flames, embers }: Options): UfoMot
     });
   };
 
+  // The ticker is not on the global timeline, so pause it ourselves while the
+  // tab is hidden (useDocumentVisibility only pauses tweens).
+  const onVisibility = () => {
+    if (document.hidden) gsap.ticker.remove(tick);
+    else gsap.ticker.add(tick);
+  };
+
   window.addEventListener("pointermove", onMove, { passive: true });
   document.addEventListener("pointerout", onLeave);
-  gsap.ticker.add(tick);
+  document.addEventListener("visibilitychange", onVisibility);
+  if (!document.hidden) gsap.ticker.add(tick);
 
   return {
     position() {
@@ -168,6 +183,7 @@ export function createUfoMotion({ root, ship, flames, embers }: Options): UfoMot
       unsubscribe();
       window.removeEventListener("pointermove", onMove);
       document.removeEventListener("pointerout", onLeave);
+      document.removeEventListener("visibilitychange", onVisibility);
       gsap.ticker.remove(tick);
       gsap.killTweensOf([root, ship]);
     }

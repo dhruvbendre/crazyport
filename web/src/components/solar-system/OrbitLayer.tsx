@@ -1,8 +1,9 @@
+import { memo } from "react";
 import { planets } from "../../data/planets";
 import type { ResolvedScene } from "../../data/orbitPaths";
 import { OrbitPath } from "./OrbitPath";
 
-export function OrbitLayer({ scene }: { scene: ResolvedScene }) {
+function OrbitLayerInner({ scene }: { scene: ResolvedScene }) {
   return (
     <g data-layer="orbits" data-dimmable filter="url(#crayon-roughness)">
       {planets.map((p) => (
@@ -11,3 +12,9 @@ export function OrbitLayer({ scene }: { scene: ResolvedScene }) {
     </g>
   );
 }
+
+/**
+ * Static once built for a layout: memoised so the scene's own state changes
+ * (hint, interactivity, unit scale) never re-diff these hundreds of nodes.
+ */
+export const OrbitLayer = memo(OrbitLayerInner);

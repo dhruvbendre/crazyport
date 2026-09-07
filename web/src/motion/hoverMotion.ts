@@ -66,14 +66,20 @@ export function planetHoverIn(t: PlanetHoverTargets): void {
   }
   if (t.chalk && !fast) {
     // A fraction of a degree, back and forth: chalk that is still being drawn.
-    const cp = getTransformProxy(t.chalk);
+    // The ring sits under a turbulence filter, so this rotation is a CSS
+    // transform on a will-change layer: the filtered ring is rasterised once
+    // and the compositor turns the bitmap, instead of the filter chain being
+    // re-run on every frame of the jitter (about 12% of frames dropped).
     jitters.get(t.chalk)?.kill();
-    cp.rotation = -0.5;
-    cp.apply();
-    jitters.set(
-      t.chalk,
-      gsap.to(cp, { rotation: 0.5, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: -1, onUpdate: cp.apply })
-    );
+    const chalk = t.chalk;
+    chalk.removeAttribute("transform");
+    chalk.style.willChange = "transform";
+    const cp = { rotation: -0.5 };
+    const apply = () => {
+      chalk.style.transform = `rotate(${cp.rotation.toFixed(3)}deg)`;
+    };
+    apply();
+    jitters.set(chalk, gsap.to(cp, { rotation: 0.5, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: -1, onUpdate: apply }));
   }
 
   if (t.label && !t.persistentLabel) {
@@ -122,8 +128,23 @@ export function planetHoverOut(t: PlanetHoverTargets): void {
   if (t.chalk) {
     jitters.get(t.chalk)?.kill();
     jitters.delete(t.chalk);
-    const cp = getTransformProxy(t.chalk);
-    gsap.to(cp, { rotation: 0, duration: 0.3, ease: "power2.out", overwrite: "auto", onUpdate: cp.apply });
+    const chalk = t.chalk;
+    const current = /rotate\(([-\d.]+)deg\)/.exec(chalk.style.transform);
+    const cp = { rotation: current ? Number(current[1]) : 0 };
+    gsap.to(cp, {
+      rotation: 0,
+      duration: 0.3,
+      ease: "power2.out",
+      overwrite: "auto",
+      onUpdate: () => {
+        chalk.style.transform = `rotate(${cp.rotation.toFixed(3)}deg)`;
+      },
+      onComplete: () => {
+        // Back to the plain drawing: no layer held while at rest.
+        chalk.style.transform = "";
+        chalk.style.willChange = "";
+      }
+    });
   }
 
   if (t.label && !t.persistentLabel) {

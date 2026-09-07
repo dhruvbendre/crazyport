@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import type { SceneLayout } from "../../data/sceneLayouts";
 import { createRng } from "../../utils/seededRandom";
 import { round } from "../../utils/math";
@@ -58,7 +58,7 @@ export function buildStars(layout: SceneLayout): Star[] {
   return stars;
 }
 
-export function StarField({ layout }: { layout: SceneLayout }) {
+function StarFieldInner({ layout }: { layout: SceneLayout }) {
   const stars = useMemo(() => buildStars(layout), [layout]);
   return (
     <g data-layer="stars" data-dimmable aria-hidden="true">
@@ -103,3 +103,9 @@ export function StarField({ layout }: { layout: SceneLayout }) {
     </g>
   );
 }
+
+/**
+ * Static once built for a layout: memoised so the scene's own state changes
+ * (hint, interactivity, unit scale) never re-diff these hundreds of nodes.
+ */
+export const StarField = memo(StarFieldInner);

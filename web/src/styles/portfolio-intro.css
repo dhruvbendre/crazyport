@@ -29,7 +29,7 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  will-change: transform, filter;
+  will-change: transform;
 }
 
 .portfolio-intro__scene,
@@ -44,6 +44,18 @@
 
 .portfolio-intro__scene {
   filter: url(#intro-crayon) saturate(1.25) contrast(1.08);
+}
+
+/* The lite tier (phones, and desktops whose frames prove they cannot carry the
+   displacement over a live canvas): the posterised crayon colour only. */
+.portfolio-intro[data-quality="lite"] .portfolio-intro__scene {
+  filter: saturate(1.25) contrast(1.08);
+}
+
+/* The portal: declared once; only --portal-edge / --portal-soft move per frame. */
+.portfolio-intro[data-portal] {
+  -webkit-mask-image: radial-gradient(circle at var(--portal-x, 50%) var(--portal-y, 50%), transparent var(--portal-soft, 0vmax), black var(--portal-edge, 0vmax));
+  mask-image: radial-gradient(circle at var(--portal-x, 50%) var(--portal-y, 50%), transparent var(--portal-soft, 0vmax), black var(--portal-edge, 0vmax));
 }
 
 /* 2 · paper tooth over the crayon: the same speckle the planets carry */

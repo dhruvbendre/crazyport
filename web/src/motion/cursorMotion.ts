@@ -1,9 +1,11 @@
 import { gsap } from "./gsapSetup";
 import { clamp } from "../utils/clamp";
+import type { StageGeometry } from "./stageGeometry";
 
 type Options = {
   stage: HTMLElement;
   svg: SVGSVGElement;
+  geometry: StageGeometry;
 };
 
 export type CursorMotion = { kill: () => void };
@@ -13,7 +15,7 @@ export type CursorMotion = { kill: () => void };
  * shift a few units, the Sun barely at all, and each planet leans a couple of
  * units toward the cursor. Everything runs through quickTo with no React state.
  */
-export function createCursorMotion({ stage, svg }: Options): CursorMotion {
+export function createCursorMotion({ stage, svg, geometry }: Options): CursorMotion {
   const stars = svg.querySelector<SVGGElement>('[data-layer="stars"]');
   const asteroids = svg.querySelector<SVGGElement>('[data-layer="asteroids"]');
   const sun = svg.querySelector<SVGGElement>('[data-parallax="sun"]');
@@ -34,11 +36,18 @@ export function createCursorMotion({ stage, svg }: Options): CursorMotion {
     max: number;
   }[];
 
-  const planetLayers = cursorWrappers.map((el) => ({
-    el,
-    x: gsap.quickTo(el, "x", { duration: 0.7, ease: "power3.out" }),
-    y: gsap.quickTo(el, "y", { duration: 0.7, ease: "power3.out" })
-  }));
+  // Planet centres in scene space are the orbit wrappers' translations. The
+  // bodies hold their composed positions (STATIC_ORBITS), so read them once
+  // here instead of walking the DOM and querying GSAP on every frame.
+  const planetLayers = cursorWrappers.map((el) => {
+    const wrapper = el.closest("[data-orbit-wrapper]") as SVGGraphicsElement | null;
+    return {
+      wx: wrapper ? Number(gsap.getProperty(wrapper, "x")) || 0 : 0,
+      wy: wrapper ? Number(gsap.getProperty(wrapper, "y")) || 0 : 0,
+      x: gsap.quickTo(el, "x", { duration: 0.7, ease: "power3.out" }),
+      y: gsap.quickTo(el, "y", { duration: 0.7, ease: "power3.out" })
+    };
+  });
 
   let raf = 0;
   let px = 0;
@@ -46,7 +55,8 @@ export function createCursorMotion({ stage, svg }: Options): CursorMotion {
 
   const update = () => {
     raf = 0;
-    const rect = stage.getBoundingClientRect();
+    // Cached geometry: no layout flush on the pointer path.
+    const rect = geometry.rect();
     const nx = clamp(((px - rect.left) / rect.width) * 2 - 1, -1, 1);
     const ny = clamp(((py - rect.top) / rect.height) * 2 - 1, -1, 1);
 
@@ -56,18 +66,10 @@ export function createCursorMotion({ stage, svg }: Options): CursorMotion {
     }
 
     // Planets lean toward the cursor by up to 3 units.
-    const ctm = svg.getScreenCTM();
-    if (!ctm) return;
-    const inverse = ctm.inverse();
-    const point = new DOMPoint(px, py).matrixTransform(inverse);
+    const point = geometry.toScene(px, py);
     for (const p of planetLayers) {
-      // Planet centre in scene space is the orbit wrapper's translation.
-      const wrapper = p.el.closest("[data-orbit-wrapper]") as SVGGraphicsElement | null;
-      if (!wrapper) continue;
-      const wx = Number(gsap.getProperty(wrapper, "x")) || 0;
-      const wy = Number(gsap.getProperty(wrapper, "y")) || 0;
-      const dx = point.x - wx;
-      const dy = point.y - wy;
+      const dx = point.x - p.wx;
+      const dy = point.y - p.wy;
       const dist = Math.hypot(dx, dy) || 1;
       const influence = clamp(1 - dist / 260, 0, 1);
       p.x((dx / dist) * 3 * influence);

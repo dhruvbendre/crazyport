@@ -143,6 +143,9 @@
 
 .chalk {
   pointer-events: none;
+  /* The hover jitter is a CSS rotation about the ring's own centre. */
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
 }
 
 .chalk__stroke,
@@ -319,6 +322,10 @@
   border-radius: 50%;
   background: var(--planet-field);
   transform: scale(0);
+}
+
+/* Promoted only for the transition itself, not for the whole session. */
+.route-overlay[data-active="true"] .route-overlay__disc {
   will-change: transform;
 }
 
@@ -404,6 +411,8 @@
   height: 30px;
   margin: -15px 0 0 -32px;
   transform-origin: 50% 60%;
+  /* Own layer: the bank/bob transform then never repaints the drop-shadowed image. */
+  will-change: transform;
 }
 
 .ufo__img {

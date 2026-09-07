@@ -1,10 +1,12 @@
 import { gsap } from "./gsapSetup";
 import { planets, type PlanetId } from "../data/planets";
 import { PROXIMITY_FACTOR } from "../data/planetInteractions";
+import type { StageGeometry } from "./stageGeometry";
 
 type Options = {
   stage: HTMLElement;
   svg: SVGSVGElement;
+  geometry: StageGeometry;
   onNear: (id: PlanetId | null) => void;
 };
 
@@ -17,7 +19,7 @@ export type PlanetProximity = { kill: () => void };
  * hit radius) and reports the nearest body, or null. Mouse pointers only, one
  * rAF per frame, no React state.
  */
-export function createPlanetProximity({ stage, svg, onNear }: Options): PlanetProximity {
+export function createPlanetProximity({ stage, svg, geometry, onNear }: Options): PlanetProximity {
   const bodies = planets
     .map((p) => {
       const wrapper = svg.querySelector<SVGGElement>(`[data-orbit-wrapper="${p.id}"]`);
@@ -50,9 +52,8 @@ export function createPlanetProximity({ stage, svg, onNear }: Options): PlanetPr
       report(null);
       return;
     }
-    const ctm = svg.getScreenCTM();
-    if (!ctm) return;
-    const point = new DOMPoint(px, py).matrixTransform(ctm.inverse());
+    // Cached client → scene transform: no layout flush per frame.
+    const point = geometry.toScene(px, py);
     let best: PlanetId | null = null;
     let bestScore = Infinity;
     for (const b of bodies) {

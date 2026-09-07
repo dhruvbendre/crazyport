@@ -89,6 +89,17 @@ export function createOrbitEngine({ svg, scene, initialProgress, reducedMotion }
     // A remembered position only matters when the planets actually travel.
     const progress = (moving && initialProgress?.[planet.id]) || orbit.startProgress;
 
+    if (!moving) {
+      // Static orbits: the body simply sits at its composed point (the same
+      // point the MotionPath tween would render at startProgress, to within
+      // 0.01 unit). Skipping the nine path parses and tweens saves a chunk of
+      // mount time on every visit and return.
+      gsap.set(wrapper, { x: orbit.start.x, y: orbit.start.y });
+      wrappers[planet.id] = wrapper;
+      speed[planet.id] = { base: 0, hover: 1, sun: VISIBLE_SPEED };
+      continue;
+    }
+
     const tween = gsap.to(wrapper, {
       motionPath: { path: orbit.d, autoRotate: false },
       duration: planet.orbitDuration,

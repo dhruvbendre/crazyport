@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { AvatarDefinition } from "@bible-strong/avatar-core";
+import type { AvatarController } from "@bible-strong/avatar-react";
+import { subscribeFrameTier, type FrameTier } from "../../motion/frameGovernor";
 import { gsap, useGSAP } from "../../motion/gsapSetup";
 import { createCompanionMotion, type CompanionMotionState } from "../../motion/companionMotion";
 import { getChatMood, subscribeChatMood } from "../../motion/companionState";
@@ -34,6 +36,22 @@ export function ScrollCompanion({ slug }: Props) {
   const [arriving, setArriving] = useState(false);
   const [chatMood, setChatMood] = useState<string | null>(() => getChatMood());
   const [size, setSize] = useState(() => (typeof window !== "undefined" && window.innerWidth < 640 ? 58 : 104));
+  const controllerRef = useRef<AvatarController | null>(null);
+  const [tier, setTier] = useState<FrameTier>("full");
+
+  // Frame governor: the avatar recomputes its whole body every frame, which is
+  // the single largest script cost on a world page. When the display is
+  // provably dropping frames, the companion holds its pose while the page is
+  // scrolling and breathes again the moment it settles. On a capable device
+  // this never engages.
+  useEffect(() => subscribeFrameTier(setTier), []);
+  useEffect(() => {
+    const c = controllerRef.current;
+    if (!c) return;
+    const hold = tier === "reduced" && motion.pace !== "idle" && !motion.docked;
+    if (hold) c.pause();
+    else if (c.getState().status === "paused") c.play(c.getState().activeAnimation ?? mood);
+  });
 
   // Load this world's body only when its page opens.
   useEffect(() => {
@@ -129,7 +147,9 @@ export function ScrollCompanion({ slug }: Props) {
         <p className="companion__text">{companion.greeting}</p>
       </div>
       <div ref={bodyRef} className="companion__body" style={{ width: size, height: size, marginLeft: -size / 2, marginTop: -size / 2 }}>
-        {definition && <CompanionAvatar definition={definition} mood={mood} name={companion.name} size="100%" className="companion__avatar" />}
+        {definition && (
+          <CompanionAvatar controller={controllerRef} definition={definition} mood={mood} name={companion.name} size="100%" className="companion__avatar" />
+        )}
       </div>
     </div>
   );

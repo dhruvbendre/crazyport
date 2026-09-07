@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import type { SceneLayout } from "../../data/sceneLayouts";
 import { createRng } from "../../utils/seededRandom";
 import { degToRad, round } from "../../utils/math";
@@ -45,7 +45,7 @@ export function buildAsteroids(layout: SceneLayout): Rock[] {
  * A loose curved belt built from a handful of reusable pebble shapes,
  * instanced with <use> so 70 rocks cost 70 nodes, not 700.
  */
-export function AsteroidBelt({ layout }: { layout: SceneLayout }) {
+function AsteroidBeltInner({ layout }: { layout: SceneLayout }) {
   const rocks = useMemo(() => buildAsteroids(layout), [layout]);
   return (
     <g data-layer="asteroids" data-dimmable aria-hidden="true">
@@ -70,3 +70,9 @@ export function AsteroidBelt({ layout }: { layout: SceneLayout }) {
     </g>
   );
 }
+
+/**
+ * Static once built for a layout: memoised so the scene's own state changes
+ * (hint, interactivity, unit scale) never re-diff these hundreds of nodes.
+ */
+export const AsteroidBelt = memo(AsteroidBeltInner);
