@@ -98,7 +98,7 @@ export const ferrin: FestivalContent = {
     {
       lockup: ["Lang", "uages"],
       meta: ["Five languages", "The base of everything else"],
-      button: { label: "View projects", href: "/verdance" },
+      button: { label: "View projects", href: "/magnara" },
       tabs: [
         { label: "Tools", lead: "Languages:", items: ["Python · software, automation, data analysis, AI and machine learning", "SQL · storing, retrieving, managing and analysing relational data", "HTML, CSS and JavaScript · full-stack websites and web apps"] },
         { label: "Used in", lead: "Where they show up:", text: "Python runs every shipped project. SQL sits behind the hackathon platform's database. HTML, CSS and JavaScript built this portfolio." }
@@ -128,7 +128,7 @@ export const ferrin: FestivalContent = {
     {
       lockup: ["Computer", "vision"],
       meta: ["Real-time recognition", "SnapClass · sign language research"],
-      button: { label: "Read research", href: "/verdance#stages" },
+      button: { label: "Read research", href: "/magnara#stages" },
       tabs: [
         { label: "Tools", lead: "Computer vision and classical ML:", items: ["MediaPipe and CVZone · hand landmarks", "dlib · face features for facial recognition", "scikit-learn · SVM and Random Forest classifiers", "Computer vision pipelines on consumer hardware"] },
         { label: "Used in", lead: "Where they show up:", text: "SnapClass attendance (SVM over dlib faces) and the sign language support system for video calls (Random Forest over hand landmarks, 98.2% accuracy)." }

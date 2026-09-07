@@ -1310,6 +1310,54 @@ button.fest-disc__art:focus-visible .fest-disc__svg {
   border-top: 1.5px dashed rgba(24, 18, 15, 0.25);
 }
 
+/* A photo of the credential with a one-line caption; a chalk frame until the photo exists. */
+.fest-card__photo {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.fest-card__photo img,
+.fest-card__photo-slot {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border: 2px solid var(--f-ink);
+  border-radius: 4px;
+  background: var(--f-white);
+}
+
+.fest-card__photo img {
+  object-fit: cover;
+}
+
+.fest-card__photo-slot {
+  display: grid;
+  place-items: center;
+  border-style: dashed;
+  background-color: rgba(24, 18, 15, 0.04);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 14px, rgba(24, 18, 15, 0.07) 14px 16px);
+}
+
+.fest-card__photo-slot span {
+  padding: 4px 12px;
+  background: var(--f-white);
+  border: 1.5px dashed rgba(24, 18, 15, 0.5);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(24, 18, 15, 0.6);
+  transform: rotate(-2deg);
+}
+
+.fest-card__photo figcaption {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 600;
+  color: var(--f-ink);
+}
+
 /* ---- information blocks -------------------------------------------------- */
 
 .fest-info {

@@ -129,9 +129,9 @@ export const allPlanets: PlanetConfig[] = [
     name: "Verdance",
     slug: "verdance",
     catalog: "III",
-    descriptor: "Projects & research",
-    section: "Projects & research",
-    question: "What has he built and researched?",
+    descriptor: "My story",
+    section: "My story",
+    question: "How did he get here?",
     route: "/verdance",
     orbitId: "orbit-earth",
     orbitDuration: 31,
@@ -142,8 +142,8 @@ export const allPlanets: PlanetConfig[] = [
     ink: "#12305a",
     glyph: "sprout",
     texture: "fields",
-    ariaLabel: "Verdance, the third world: projects and research",
-    intro: "The green and blue world, the one with a satellite. Fields of things that were grown from an idea and shipped into the open, and the research grown underneath them."
+    ariaLabel: "Verdance, the third world: my story",
+    intro: "The green and blue world, the one with a satellite. One long story, read top to bottom as it grew: where it started, what changed, and what comes next."
   },
   {
     id: "mars",
@@ -171,9 +171,9 @@ export const allPlanets: PlanetConfig[] = [
     name: "Magnara",
     slug: "magnara",
     catalog: "V",
-    descriptor: "My story",
-    section: "My story",
-    question: "How did he get here?",
+    descriptor: "Projects & research",
+    section: "Projects & research",
+    question: "What has he built and researched?",
     route: "/magnara",
     orbitId: "orbit-jupiter",
     orbitDuration: 52,
@@ -184,8 +184,8 @@ export const allPlanets: PlanetConfig[] = [
     ink: "#4d2a10",
     glyph: "band",
     texture: "bands",
-    ariaLabel: "Magnara, the fifth world: my story",
-    intro: "The great banded world. One long story, read top to bottom like weather: where it started, what changed, and what comes next."
+    ariaLabel: "Magnara, the fifth world: projects and research",
+    intro: "The great banded world. Each band is something that was built from an idea and shipped into the open, and the research runs underneath them."
   },
   {
     // The ringed world is Signal itself: about me and contact, the end of the journey.

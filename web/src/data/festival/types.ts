@@ -60,6 +60,12 @@ export type FestivalCard = {
    * `dark` marks a logo drawn in white; it is inverted to ink on the paper.
    */
   logo?: { src: string; alt: string; dark?: boolean };
+  /**
+   * A photo of the thing itself (a certificate, an award) with a one-line
+   * caption under it. Without `src` a chalk placeholder frame is drawn, so
+   * the slot is visible before the photo exists. Replaces the detail list.
+   */
+  photo?: { src?: string; caption: string; alt?: string };
 };
 
 export type NoteBlock = { title: string; items: { q: string; a: string }[] };

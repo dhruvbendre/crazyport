@@ -82,7 +82,7 @@ export const cadence: FestivalContent = {
     {
       lockup: ["Sketch", "Loop"],
       meta: ["Days", "An idea, shaped and questioned"],
-      button: { label: "See it", href: "/verdance" },
+      button: { label: "See it", href: "/magnara" },
       tabs: [
         { label: "What happens", lead: "Take an idea and shape it:", items: ["Name the problem and the person it is for", "Question it until the shape is clear", "Decide what one to four weeks can hold"] },
         { label: "Example", lead: "SnapClass:", text: "The problem was a slow roll call; the constraint was a plain web app a school could open. The sketch was: faces, voices, minimal clicks." }

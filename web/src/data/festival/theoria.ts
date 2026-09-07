@@ -3,6 +3,7 @@ import { MAIL_TO, type FestivalContent } from "./types";
 const DOI = "https://doi.org/10.5281/zenodo.20352667";
 
 /**
+ * Photos: drop the file in public/festival/theoria/photos/ and set `photo.src` on the card (2026-09-07).
  * Theoria · Certificates & achievements · "What proves his learning and achievements?"
  * Verified items: the Aavishkar Zonal Round win (2025) and the published paper on
  * Zenodo. No certificate files exist in the repository yet; the certificate slots
@@ -83,7 +84,8 @@ export const theoria: FestivalContent = {
     {
       lockup: ["Award"],
       meta: ["Year · 2025", "Issued by · Aavishkar"],
-      button: { label: "View project", href: "/verdance#stages" },
+      button: { label: "View project", href: "/magnara#stages" },
+      photo: { caption: "Aavishkar Zonal Round winner, 2025 · real-time sign language support for video calls" },
       tabs: [
         { label: "Details", lead: "Aavishkar Zonal Round winner:", items: ["Title · Aavishkar Zonal Round winner", "Issued by · Aavishkar", "Year · 2025", "Category · competition win", "For · a real-time sign language support system for video calls"] },
         { label: "Skills shown", lead: "What it proves:", text: "Real-time computer vision (WebRTC, MediaPipe, CVZone), classical machine learning (Random Forest), and building an accessible product that works on ordinary hardware. The project was featured for the award." }
@@ -94,6 +96,7 @@ export const theoria: FestivalContent = {
       lockup: ["Publi", "cation"],
       meta: ["Published on · Zenodo", "DOI 10.5281/zenodo.20352667"],
       button: { label: "View publication", href: DOI },
+      photo: { caption: "Published research on Zenodo · sign language support on video calls, 98.2% accuracy" },
       tabs: [
         { label: "Details", lead: "Published research:", items: ["Title · Sign language support on video calls (full title on the Zenodo record)", "Published on · Zenodo", "Category · publication", "Verify · the DOI link", "Result · 98.2% recognition accuracy"] },
         { label: "Skills shown", lead: "What it proves:", text: "Research method, evaluation and writing: a lightweight landmark-based approach measured at 98.2% accuracy with low latency. The full research is on the Projects & research page." }
@@ -104,8 +107,9 @@ export const theoria: FestivalContent = {
       lockup: ["Certif", "icate"],
       meta: [`Issued by · ${CERTIFICATE_NEEDED}`, `Year · ${CERTIFICATE_NEEDED}`],
       button: { label: "View certificate", href: "#ask" },
+      photo: { caption: "Python certificate" },
       tabs: [
-        { label: "Details", lead: "Placeholder · not a real credential yet:", items: ["Title · [CERTIFICATE NEEDED]", "Issued by · [CERTIFICATE NEEDED]", "Year · [CERTIFICATE NEEDED]", "Category · course, certification or training", "Image · none yet"] },
+        { label: "Details", lead: "Placeholder · not a real credential yet:", items: ["Title · Python certificate", "Issued by · [CERTIFICATE NEEDED]", "Year · [CERTIFICATE NEEDED]", "Category · course, certification or training", "Image · none yet"] },
         { label: "Skills shown", lead: "What it proves:", text: "[CERTIFICATE NEEDED] Add a one-line description and the skills demonstrated once the certificate file and its verification link are in the repository." }
       ],
       patch: 45
@@ -114,6 +118,7 @@ export const theoria: FestivalContent = {
       lockup: ["Certif", "icate"],
       meta: [`Issued by · ${CERTIFICATE_NEEDED}`, `Year · ${CERTIFICATE_NEEDED}`],
       button: { label: "View certificate", href: "#ask" },
+      photo: { caption: "Certificate · title coming" },
       tabs: [
         { label: "Details", lead: "Placeholder · not a real credential yet:", items: ["Title · [CERTIFICATE NEEDED]", "Issued by · [CERTIFICATE NEEDED]", "Year · [CERTIFICATE NEEDED]", "Category · course, certification or training", "Image · none yet"] },
         { label: "Skills shown", lead: "What it proves:", text: "[CERTIFICATE NEEDED] Add a one-line description and the skills demonstrated once the certificate file and its verification link are in the repository." }

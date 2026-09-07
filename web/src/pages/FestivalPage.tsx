@@ -192,11 +192,24 @@ function StageCard({ content, card, index }: { content: FestivalContent; card: F
         </div>
         <div className="fest-card__right">
           {image && <img className="fest-card__image" src={image} alt="" loading="lazy" />}
-          <ul className="fest-card__list">
-            {lines.map((t) => (
-              <li key={t}>{t}</li>
-            ))}
-          </ul>
+          {card.photo ? (
+            <figure className="fest-card__photo">
+              {card.photo.src ? (
+                <img src={card.photo.src} alt={card.photo.alt ?? card.photo.caption} loading="lazy" />
+              ) : (
+                <span className="fest-card__photo-slot" aria-hidden="true">
+                  <span>Photo</span>
+                </span>
+              )}
+              <figcaption>{card.photo.caption}</figcaption>
+            </figure>
+          ) : (
+            <ul className="fest-card__list">
+              {lines.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </article>
@@ -425,7 +438,7 @@ export function FestivalPage({ content, theme, planet }: Props) {
           </h2>
           <div className="fest-cards">
             {content.cards.map((c, i) => (
-              <StageCard key={c.lockup.join("-")} content={content} card={c} index={i} />
+              <StageCard key={`${i}-${c.lockup.join("-")}`} content={content} card={c} index={i} />
             ))}
           </div>
         </div>

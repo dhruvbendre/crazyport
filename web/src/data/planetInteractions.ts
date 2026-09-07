@@ -118,7 +118,7 @@ export const planetInteractions: Record<PlanetId, PlanetInteraction> = {
     ]
   },
 
-  /* ---- Verdance: projects & research. -------------------------------------- */
+  /* ---- Verdance: my story (swapped with Magnara 2026-09-07). ------------------ */
   earth: {
     category: "Projects & Research",
     hoverEffect: "growth",
@@ -160,7 +160,7 @@ export const planetInteractions: Record<PlanetId, PlanetInteraction> = {
     ]
   },
 
-  /* ---- Magnara: my story. -------------------------------------------------- */
+  /* ---- Magnara: projects & research (swapped with Verdance 2026-09-07). ------- */
   jupiter: {
     category: "My Story",
     hoverEffect: "story",

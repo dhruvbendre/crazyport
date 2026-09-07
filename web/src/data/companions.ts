@@ -68,7 +68,7 @@ export const companions: Record<string, Companion> = {
     moods: { greet: "curious", idle: "drowsy", scroll: "curious", rush: "surprised", arrive: "happy" },
     load: definition(() => import("./avatars/ember.avatar.json"))
   },
-  verdance: {
+  magnara: {
     id: "sprig",
     name: "Sprig",
     tagline: "grew from an idea",
@@ -84,7 +84,7 @@ export const companions: Record<string, Companion> = {
     moods: { greet: "proud", idle: "idle", scroll: "thinking", rush: "suspicious", arrive: "proud" },
     load: definition(() => import("./avatars/tally.avatar.json"))
   },
-  magnara: {
+  verdance: {
     id: "saga",
     name: "Saga",
     tagline: "reads like weather",
