@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useGSAP } from "../../motion/gsapSetup";
-import { planetOrder, planetById, planetHref, planets, SIGNAL_ROUTE } from "../../data/planets";
+import { planetOrder, planetById, planets, SIGNAL_ROUTE } from "../../data/planets";
 import type { PortfolioSection } from "../../data/portfolio";
 import { playPageEnter } from "../../motion/routeTransitions";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
@@ -146,7 +146,7 @@ export function WorldPageShell({ theme, sections = [], children, hideNext, class
 
         <footer className="world__footer" data-enter>
           {next && !hideNext ? (
-            <Link className="world__next" to={planetHref(next)} reloadDocument={/^https?:/.test(planetHref(next))}>
+            <Link className="world__next" to={next.route}>
               <span className="world__next-label">Next orbit</span>
               <span className="world__next-name">
                 {next.catalog} · {next.name}

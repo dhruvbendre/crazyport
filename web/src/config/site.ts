@@ -15,11 +15,11 @@ export const site = {
   /** Title suffix for every page. */
   titleSuffix: "Dhruv Bendre",
   /**
-   * Where the archive (the Streamlit app in the rorobot repo, Roro) lives.
-   * Clicking the Mnemora planet leaves the portfolio for this URL. Override
-   * with VITE_ARCHIVE_URL when the app is deployed somewhere else.
+   * Where the archive (the Streamlit app behind Mnemora) lives. Empty means
+   * the archive is not connected in this build and the threshold page says so.
+   * Examples: https://ask.dhruvbendre.com or a *.streamlit.app URL.
    */
-  archiveUrl: read("VITE_ARCHIVE_URL", "https://rorobot.streamlit.app"),
+  archiveUrl: read("VITE_ARCHIVE_URL"),
   /**
    * Where the archive API lives (dhruv-rag/api.py). The Mnemora page chats
    * with it directly. Empty means the Vite dev proxy at /api/archive.
