@@ -21,8 +21,7 @@ export const mnemora: FestivalContent = {
   nav: {
     links: [
       { label: "Ask Roro", href: "#ask" },
-      { label: "What it knows", href: "#stages" },
-      { label: "How it works", href: "#notes" }
+      { label: "What it knows", href: "#stages" }
     ],
     cta: { label: "Ask Roro", to: "#ask" }
   },
@@ -135,30 +134,6 @@ export const mnemora: FestivalContent = {
       patch: 46
     }
   ],
-  info: {
-    label: ["How the", "archive works"],
-    blocks: [
-      {
-        title: "Common questions",
-        items: [
-          { q: "What does it know?", a: "Seven documents about Dhruv: profile, projects, experience, research, skills, achievements and interests. Education and certificates are not written yet, so it will say so." },
-          { q: "What does it refuse?", a: "Anything not in the documents. It says plainly that the archive doesn't hold it yet, instead of guessing." },
-          { q: "How does it cite?", a: "Every answer ends with a \"from the archive\" line naming the document and section it came from." },
-          { q: "When is it updated?", a: "Whenever a document changes. Last updated 5 September 2026." }
-        ]
-      },
-      { title: "How answers arrive", items: [{ q: "What does an answer look like?", a: "A short reply grounded in the documents, with its sources listed underneath." }] },
-      { title: "Where the archive lives", items: [{ q: "Is it on this page?", a: "The archive is a separate app in the same style. Asking here takes you into it." }] },
-      {
-        title: "Ground rules",
-        items: [
-          { q: "It never guesses", a: "If it is not written in the archive, it does not exist for it." },
-          { q: "It answers the question asked", a: "A short grounded answer beats a long plausible one." }
-        ]
-      }
-    ],
-    chips: { title: ["Topics it", "covers"], items: ["Profile", "Projects", "Experience", "Research", "Skills", "Achievements", "Interests"] }
-  },
   partners: {
     rows: [
       { key: "Runs on", items: ["Streamlit", "Python"], size: "big" },

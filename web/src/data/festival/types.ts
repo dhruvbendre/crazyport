@@ -135,7 +135,8 @@ export type FestivalContent = {
     offline: string;
   };
   cards: FestivalCard[];
-  info: {
+  /** The notes section. Omitted on worlds where it would only repeat the cards (2026-09-07). */
+  info?: {
     label: [string, string];
     blocks: [NoteBlock, NoteBlock, NoteBlock, NoteBlock];
     chips: { title: [string, string]; items: string[] };

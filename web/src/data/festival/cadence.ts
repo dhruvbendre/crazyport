@@ -22,8 +22,7 @@ export const cadence: FestivalContent = {
   nav: {
     links: [
       { label: "Loops", href: "#lineup" },
-      { label: "Principles", href: "#stages" },
-      { label: "Notes", href: "#notes" }
+      { label: "Principles", href: "#stages" }
     ],
     cta: { label: "Send a signal", to: "/signal" }
   },
@@ -121,31 +120,6 @@ export const cadence: FestivalContent = {
       patch: 46
     }
   ],
-  info: {
-    label: ["Process", "information"],
-    blocks: [
-      {
-        title: "Process FAQ",
-        items: [
-          { q: "How long does a first version take?", a: "One to four weeks. The hackathon platform took one; SnapClass and the research system took three to four." },
-          { q: "When is the interface redesigned?", a: "After the thing has proved itself, as MyChessBot is doing now." },
-          { q: "How are agents split?", a: "One responsibility each: search, read, write, critique. It keeps the system scalable and easy to extend." },
-          { q: "How is quality measured?", a: "98.2% accuracy in the research, a critic agent that scores its own reports, dashboards that make trends visible." }
-        ]
-      },
-      { title: "Home delivery", items: [{ q: "What arrives first?", a: "A working version in one to four weeks, in the browser." }] },
-      { title: "Box office", items: [{ q: "What does a project need to start?", a: "The problem, the user, and the constraint that makes it interesting." }] },
-      {
-        title: "Loop essentials",
-        items: [
-          { q: "The approach may be unconventional", a: "The dedication to innovation is not." },
-          { q: "Look for the unexpected solution", a: "With the right technology and perspective, AI can change the way people work and interact with the world." },
-          { q: "Chase a perfection you may never catch", a: "And stop to say hello to a cat along the way." }
-        ]
-      }
-    ],
-    chips: { title: ["The", "principles"], items: ["Unconventional approach", "Unexpected solutions", "AI changes how people work", "Every detail", "Hello to a cat"] }
-  },
   partners: {
     rows: [
       { key: "Runs on", items: ["Curiosity", "Streamlit"], size: "big" },

@@ -1,4 +1,4 @@
-import { festival, lineup, notes, onRepeat, playedOn, SAMPLE_LINEUP, stages, topSongs } from "../music";
+import { festival, lineup, onRepeat, playedOn, SAMPLE_LINEUP, stages, topSongs } from "../music";
 import { MAIL_TO, type FestivalContent } from "./types";
 
 /** Sonara · Music · "What does he listen to?" The lineup itself is edited in data/music.ts. */
@@ -17,8 +17,7 @@ export const sonara: FestivalContent = {
   nav: {
     links: [
       { label: "Favourite artists", href: "#lineup" },
-      { label: "Genres", href: "#stages" },
-      { label: "Albums", href: "#notes" }
+      { label: "Genres", href: "#stages" }
     ],
     cta: { label: "Contact me", to: "/signal" }
   },
@@ -72,16 +71,6 @@ export const sonara: FestivalContent = {
     ],
     patch: [47, 48, 45, 46][i % 4]
   })),
-  info: {
-    label: ["What I'm", "listening to"],
-    blocks: [
-      { title: "How I listen", items: notes[0].items },
-      { title: "Recommendations", items: notes[1].items },
-      { title: "Where to listen", items: notes[2].items },
-      { title: "Headphone rules", items: notes[3].items }
-    ],
-    chips: { title: ["Albums", "on repeat"], items: [...onRepeat.albums] }
-  },
   partners: {
     rows: [
       { key: "Played on", items: [...playedOn.presented], size: "big" },

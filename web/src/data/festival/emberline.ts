@@ -20,8 +20,7 @@ export const emberline: FestivalContent = {
   nav: {
     links: [
       { label: "Career timeline", href: "#lineup" },
-      { label: "My roles", href: "#stages" },
-      { label: "What I learned", href: "#notes" }
+      { label: "My roles", href: "#stages" }
     ],
     cta: { label: "Contact me", to: "/signal" }
   },
@@ -121,31 +120,6 @@ export const emberline: FestivalContent = {
       patch: 46
     }
   ],
-  info: {
-    label: ["About my", "experience"],
-    blocks: [
-      {
-        title: "Common questions",
-        items: [
-          { q: "Where have you worked?", a: "SocioHub (Digital Marketing Intern), NullClass (Data Analyst Intern, April to May 2025) and My Equity School (Data Science Intern, June to August 2025)." },
-          { q: "What did each role produce?", a: "Campaigns, captions and organised campaign data at SocioHub; Twitter engagement dashboards at NullClass; Power BI dashboards and lead-flow predictions at My Equity School." },
-          { q: "How did the roles progress?", a: "From marketing and campaign data, to analytics and dashboards, to data science and prediction. Each role handed the next one a habit." },
-          { q: "What comes next?", a: "AI engineering and data science work: agents, RAG, computer vision, and dashboards that people actually read." }
-        ]
-      },
-      { title: "Resume", items: [{ q: "Where is it?", a: "One click away: the Open resume button on every role opens it on Google Drive." }] },
-      { title: "Hiring", items: [{ q: "How do I hire you?", a: "Send a message with the role and the work. Replies usually arrive within a week." }] },
-      {
-        title: "What I carried forward",
-        items: [
-          { q: "From marketing", a: "An eye for how work is presented." },
-          { q: "From analytics", a: "The habit of turning raw, messy data into something a person can read at a glance." },
-          { q: "Both together", a: "Dashboards that explain themselves and interfaces that are pleasant to use." }
-        ]
-      }
-    ],
-    chips: { title: ["Skills from", "these roles"], items: ["Power BI", "CRM data", "Lead flow", "Engagement trends", "Data cleaning", "Campaign Excel", "Reporting"] }
-  },
   partners: {
     rows: [
       { key: "Worked at", items: ["My Equity School", "NullClass"], size: "big" },

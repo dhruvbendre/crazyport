@@ -20,8 +20,7 @@ export const whimsel: FestivalContent = {
   nav: {
     links: [
       { label: "Toys", href: "#lineup" },
-      { label: "Experiments", href: "#stages" },
-      { label: "Notes", href: "#notes" }
+      { label: "Experiments", href: "#stages" }
     ],
     cta: { label: "Send a signal", to: "/signal" }
   },
@@ -118,30 +117,6 @@ export const whimsel: FestivalContent = {
       patch: 46
     }
   ],
-  info: {
-    label: ["Playground", "information"],
-    blocks: [
-      {
-        title: "Playground FAQ",
-        items: [
-          { q: "What is the chess bot?", a: "An AI chess application that learns Dhruv's playing style from his own PGN games and combines it with Stockfish for accurate, human-like play." },
-          { q: "When does the demo open?", a: "Once the interface redesign is complete. The source is on GitHub now." },
-          { q: "What is n8n for?", a: "Connecting apps, APIs, databases and AI tools into workflows without writing code." },
-          { q: "Why is the site a solar system?", a: "Because a portfolio can be a place. The Sun is Dhruv; every planet is a part of the work." }
-        ]
-      },
-      { title: "Home delivery", items: [{ q: "When will I get the demo?", a: "When the redesign is done. Until then, the repository is open." }] },
-      { title: "Box office", items: [{ q: "Where is the source?", a: "MyChessBot on GitHub, in the chessBot repository." }] },
-      {
-        title: "Toy essentials",
-        items: [
-          { q: "Keep what taught something", a: "Prototypes, sketches, toys and half-ideas stay if they taught something on the way." },
-          { q: "Pin it at an angle", a: "Nothing here needs to be finished to be worth keeping." }
-        ]
-      }
-    ],
-    chips: { title: ["In the", "box"], items: ["Stockfish", "PGN", "Streamlit", "n8n", "GSAP", "Crayon", "Chalk"] }
-  },
   partners: {
     rows: [
       { key: "Plays on", items: ["Streamlit", "GitHub"], size: "big" },

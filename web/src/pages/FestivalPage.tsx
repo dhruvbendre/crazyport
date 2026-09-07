@@ -235,6 +235,7 @@ export function FestivalPage({ content, theme, planet }: Props) {
 
   const tiers = [1, 2, 3, 4, 5] as const;
   const t = content.theme;
+  const info = content.info;
   const style: CSSProperties = {
     ...themeStyle(theme),
     "--f-poster": t.poster,
@@ -422,37 +423,39 @@ export function FestivalPage({ content, theme, planet }: Props) {
         </div>
       </section>
 
-      {/* 7 · Information */}
-      <section className="fest-info" id="notes" aria-labelledby="fest-notes-title">
-        <div className="fest-info__inner">
-          <h2 id="fest-notes-title" className="fest-label" data-enter>
-            <span className="fest-label__wide">{content.info.label[0]}</span> <span>{content.info.label[1]}</span>
-          </h2>
-          <div className="fest-blocks">
-            {content.info.blocks.map((block) => (
-              <div key={block.title} className="fest-block" data-enter>
-                <h3>{block.title}</h3>
-                {block.items.map((it) => (
-                  <div key={it.q} className="fest-block__item">
-                    <p className="fest-block__q">{it.q}</p>
-                    <p className="fest-block__a">{it.a}</p>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-          <div className="fest-info__albums" data-enter>
-            <h3 className="fest-label fest-label--small">
-              <span className="fest-label__wide">{content.info.chips.title[0]}</span> <span>{content.info.chips.title[1]}</span>
-            </h3>
-            <ul className="fest-albums">
-              {content.info.chips.items.map((a) => (
-                <li key={a}>{a}</li>
+      {/* 7 · Information (optional) */}
+      {info && (
+        <section className="fest-info" id="notes" aria-labelledby="fest-notes-title">
+          <div className="fest-info__inner">
+            <h2 id="fest-notes-title" className="fest-label" data-enter>
+              <span className="fest-label__wide">{info.label[0]}</span> <span>{info.label[1]}</span>
+            </h2>
+            <div className="fest-blocks">
+              {info.blocks.map((block) => (
+                <div key={block.title} className="fest-block" data-enter>
+                  <h3>{block.title}</h3>
+                  {block.items.map((it) => (
+                    <div key={it.q} className="fest-block__item">
+                      <p className="fest-block__q">{it.q}</p>
+                      <p className="fest-block__a">{it.a}</p>
+                    </div>
+                  ))}
+                </div>
               ))}
-            </ul>
+            </div>
+            <div className="fest-info__albums" data-enter>
+              <h3 className="fest-label fest-label--small">
+                <span className="fest-label__wide">{info.chips.title[0]}</span> <span>{info.chips.title[1]}</span>
+              </h3>
+              <ul className="fest-albums">
+                {info.chips.items.map((a) => (
+                  <li key={a}>{a}</li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* 8 · Partner strip */}
       <section className="fest-partners" aria-label="Tools and partners">
